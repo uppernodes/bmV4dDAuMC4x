@@ -10,6 +10,7 @@ import { AxiosResponse } from "axios";
 
 type User = {
   _id: string;
+  avatar?: string;
   name: string;
   email: string;
   permissions?: string[];
@@ -52,13 +53,15 @@ type AuthContextData = {
   user: User;
   isAuthenticated: boolean;
   updateName: (values: TUpdate) => Promise<any>;
+  darkMode: boolean;
+  setDarkMode: (value: boolean) => Promise<any>;
 };
 
 type AuthProviderProps = {
   children: ReactNode;
 };
 
-export const AuthContext = createContext({} as AuthContextData);
+export const Context = createContext({} as AuthContextData);
 
 let authChannel: BroadcastChannel;
 
@@ -71,7 +74,7 @@ export function signOut() {
   // Router.push("/");
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function ContextProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>();
   const isAuthenticated = !!user;
 
@@ -79,6 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const toast = useToast();
 
   useEffect(() => {
+    
     const { "nextauth.token": token } = parseCookies();
 
     if (!token) {
@@ -87,7 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else if (router.pathname === "/auth/signup") {
         //
       } else {
-        router.push("/");
+        // router.push("/");
       }
     } else if (token) {
       // Verify if token is valid
@@ -95,6 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const decoded: User = jwtDecode(token);
 
+      // key manager res.data verificar tudo aqui
       api.get(`/auth/user/${decoded._id}`).then((res) => {
         if (!res.data) {
           destroyCookie(undefined, "nextauth.token");
@@ -102,7 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           router.push("/");
         } else {
           setUser(res.data);
-          // router.push("/dashboard");
+          router.push("/admin")
         }
       });
 
@@ -262,8 +267,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
     Router.push("/");
   }
 
+  const [darkMode, handleSetDarkMode] = useState(false);
+
+  useEffect(() => {
+    isDarkMode();
+  }, [darkMode]);
+
+  async function setDarkMode(value: boolean) {
+    return new Promise((resolve, reject) => {
+      if (value === true) {
+        handleSetDarkMode(true);
+        resolve("Dark.Mode is now true");
+      } else if (value === false) {
+        handleSetDarkMode(false);
+        resolve("Dark.Mode is now false");
+      } else {
+        reject("Valor invalido");
+      }
+    });
+  }
+
+  async function isDarkMode() {
+    return new Promise((resolve, reject) => {
+      if (localStorage.getItem("Dark.Mode") === "true") {
+        resolve("Dark.Mode true");
+        handleSetDarkMode(true);
+      } else if (localStorage.getItem("Dark.Mode") === "false") {
+        resolve("Dark.Mode false");
+        handleSetDarkMode(false);
+      } else {
+        reject("Valor invalido");
+      }
+    });
+  }
+
   return (
-    <AuthContext.Provider
+    <Context.Provider
       value={{
         signIn,
         signUp,
@@ -271,9 +310,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         updateName,
         isAuthenticated,
         user,
+        darkMode,
+        setDarkMode,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </Context.Provider>
   );
 }

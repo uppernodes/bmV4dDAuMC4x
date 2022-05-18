@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Text,
   Flex,
@@ -26,6 +26,7 @@ import {
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 import Head from "next/head";
+import { Context } from "../contexts/ContextProvider";
 
 // 404 Illustration
 // by Natasha Kukhalskaya
@@ -36,6 +37,8 @@ export default function NotFound() {
     md: true,
     lg: true,
   });
+
+  const { user, signOut, darkMode, setDarkMode } = useContext(Context);
 
   const toast = useToast();
   const router = useRouter();
@@ -60,7 +63,7 @@ export default function NotFound() {
   //       >
   //         <Flex align="center">
   //           <Image
-  //             src="https://f5a5-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+  //             src="https://06d2-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
   //             w="45"
   //             h="45"
   //             mr="2"
@@ -321,7 +324,7 @@ export default function NotFound() {
           >
             <Text
               cursor="pointer"
-              color="#333"
+              color={darkMode ? "#FFF" : "#333"}
               fontSize="lg"
               fontWeight="bold"
               fontFamily="'Quicksand', sans-serif"
@@ -332,7 +335,7 @@ export default function NotFound() {
           <Link href="https://dribbble.com/natashakukhalskaya" passHref={true}>
             <Text
               cursor="pointer"
-              color="#333"
+              color={darkMode ? "#FFF" : "#333"}
               fontWeight="regular"
               fontSize="xs"
               fontFamily="'Quicksand', sans-serif"
@@ -389,7 +392,7 @@ export default function NotFound() {
 
   return (
     <>
-      <Flex flex="1" flexDir="column" h="100vh" justifyContent="space-between">
+      <Flex flex="1" flexDir="column" h="100vh" bg={darkMode ? "#333" : "#eee"} justifyContent="space-between">
         <Head>
           <meta
             name="viewport"

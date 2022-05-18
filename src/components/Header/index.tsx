@@ -11,17 +11,21 @@ import {
 import { Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
+import { MdDarkMode } from "react-icons/md";
 import { RiCloseFill, RiUserLine } from "react-icons/ri";
-import { AuthContext } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
 
 export default function Header() {
-  const { user } = useContext(AuthContext);
+  const { user, darkMode, setDarkMode } = useContext(Context);
 
   const [menu, setMenu] = useState(false);
 
   // LUMCuagNtbEyvS4 mdb
   // dimitrious mdb.user
   // rXK9z3eU9MZbhPRE mdb.password
+
+  // ricardofsdomene@icloud.com
+  // Azd202020
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -38,11 +42,17 @@ export default function Header() {
           h="calc(100vh - 80px)"
           style={{ marginTop: 80 }}
           w="100vw"
-          boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+          boxShadow="rgba(159,159,159,0.1) 0 0 10px"
           bg="#FFF"
         ></Flex>
       )}
-      <Flex align="center" p="4" bg="#fafafa" w="100vw" style={{ height: 80 }}>
+      <Flex
+        align="center"
+        p="4"
+        bg={darkMode ? "#333" : "#eee"}
+        w="100vw"
+        style={{ height: 80 }}
+      >
         <Flex
           justify="space-between"
           align="center"
@@ -52,14 +62,23 @@ export default function Header() {
         >
           <Flex align="center">
             <Image
-              src="https://f5a5-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="https://d1e4-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               mr="2"
             />
-            <Text fontWeight="bold" color="#000">
-              uppernodes
-            </Text>
+            <Flex
+              onClick={() => setDarkMode(!darkMode)}
+              cursor="pointer"
+              boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+              align="center"
+              p="3"
+              borderRadius="full"
+              flexDir="row"
+            >
+              <Icon as={MdDarkMode} color={darkMode ? "#FFF" : "#333"} />
+              <Flex flexDir="column" align="flex-end"></Flex>
+            </Flex>
           </Flex>
           <Flex align="center">
             <Menu>
@@ -69,7 +88,7 @@ export default function Header() {
                 _hover={{
                   height: 40,
                   width: 40,
-                  backgroundColor: "#eee",
+                  backgroundColor: darkMode ? "#555" : "#e0e0e0",
                 }}
                 style={{
                   height: 40,
@@ -81,7 +100,7 @@ export default function Header() {
                   mt="1"
                   as={RiUserLine}
                   cursor="pointer"
-                  color="#000"
+                  color={darkMode ? "#EEE" : "#333"}
                   fontSize="20"
                 />
               </MenuButton>
@@ -93,11 +112,14 @@ export default function Header() {
                   }}
                   justifyContent="space-between"
                   py="4"
-                  onClick={() => {}}
+                  onClick={() => {
+                    setDarkMode(false);
+                  }}
                   color="#333"
                   fontSize="sm"
                 >
-                  Quero armazenar leads
+                  Modo escuro
+                  <Icon as={MdDarkMode} color="#333" />
                 </MenuItem>
                 <MenuItem
                   _hover={{
