@@ -73,7 +73,7 @@ export default function UserId() {
 
   return (
     <Flex flexDir="column">
-      <Header />
+      <Header none={false} />
 
       <Flex
         mt="4"
