@@ -32,12 +32,13 @@ import { useContext } from "react";
 import { BiChevronDown, BiListPlus, BiUserPlus } from "react-icons/bi";
 import { RiAlertLine, RiCloseFill, RiInformationLine } from "react-icons/ri";
 import NumberFormat from "react-number-format";
+import Loading from "../../../components/Loading";
 import TopNav from "../../../components/TopNav";
 import { Context } from "../../../contexts/ContextProvider";
 import { api } from "../../../services/apiClient";
 
 export default function Curso() {
-  const { user } = useContext(Context);
+  const { user, loading } = useContext(Context);
 
   type Course = {
     _id: string;
@@ -52,7 +53,7 @@ export default function Curso() {
   const [courseInitialized, setCourseInitialized] = useState(false);
   const [courseCreated, setCourseCreated] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [localLoading, setLocalLoading] = useState(true);
 
   const router = useRouter();
 
@@ -727,11 +728,11 @@ export default function Curso() {
   }
 
   if (!user) {
-    return (
-      <Flex w="100vw" h="100vh" justify="center" align="center">
-        <Spinner color="#333" size="lg" />
-      </Flex>
-    );
+    return <Loading />;
+  } else {
+    if (loading) {
+      return <Loading />;
+    }
   }
 
   return (
@@ -773,7 +774,7 @@ export default function Curso() {
                     setCourseId(res.data._id);
                     setCourse(res.data);
                     setCourseInitialized(true);
-                    setLoading(false);
+                    setLocalLoading(false);
                   });
                 }
               }}

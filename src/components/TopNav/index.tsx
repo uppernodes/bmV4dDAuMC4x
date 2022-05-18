@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BiListPlus, BiLogOut, BiUserPlus } from "react-icons/bi";
 import { MdDarkMode } from "react-icons/md";
 import {
@@ -39,7 +39,7 @@ export default function TopNav() {
     <Flex
       zIndex="1000"
       position="fixed"
-      boxShadow="rgba(150,150,150,0.1) 0 0 10px"
+      boxShadow="rgba(0,0,0,0.1) 0 0 10px"
       style={{ width: "100vw" }}
       align="center"
       mx="auto"
@@ -49,12 +49,11 @@ export default function TopNav() {
       flexDir="row"
     >
       <Flex flexDir="row" align="center">
-        <Link href={user && user._id ? "/dashboard" : "/"}>
+        <Link href={user && user._id ? "/admin" : "/"}>
           <Flex cursor="pointer" align="center" flexDir="row">
             <Image
               borderRadius="full"
-              boxShadow="rgba(200,200,200,0.1) 0 0 10px"
-              src="https://d1e4-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               mr="2"
@@ -63,9 +62,15 @@ export default function TopNav() {
           </Flex>
         </Link>
         <Flex
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => {
+            setDarkMode(!darkMode);
+          }}
           cursor="pointer"
-          boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+          boxShadow={
+            darkMode
+              ? "rgba(200,200,200,0.1) 0 0 10px"
+              : "rgba(0,0,0,0.1) 0 0 10px"
+          }
           align="center"
           p="3"
           borderRadius="full"
@@ -134,11 +139,10 @@ export default function TopNav() {
 
             <Flex flexDir="column">
               <MenuItem
-                _focus={{
-                }}
+                _focus={{}}
                 _hover={{
                   backgroundColor: "#eee",
-                  color: darkMode ? "#333" : "#000"
+                  color: darkMode ? "#333" : "#000",
                 }}
                 justifyContent="space-between"
                 py="4"
@@ -153,7 +157,7 @@ export default function TopNav() {
               <MenuItem
                 _hover={{
                   backgroundColor: "#eee",
-                  color: darkMode ? "#333" : "#000"
+                  color: darkMode ? "#333" : "#000",
                 }}
                 justifyContent="space-between"
                 py="4"

@@ -101,7 +101,7 @@ export default function SignUp() {
   }
 
   return (
-    <Flex maxH={size.height} h="100vh" bg="#fafafa">
+    <Flex h="100%" bg="#fafafa">
       <Head>
         <meta
           name="viewport"
@@ -123,7 +123,7 @@ export default function SignUp() {
         >
           <Flex align="center">
             <Image
-              src="https://06d2-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               ml={-5}
@@ -153,7 +153,7 @@ export default function SignUp() {
             align="center"
             bg="#FFF"
           >
-            <Text color="#777" fontSize="xl" fontWeight="bold">
+            <Text color="#555" fontSize="xl" fontWeight="bold">
               Entrar na sua conta
             </Text>
 
@@ -303,7 +303,7 @@ export default function SignUp() {
             </Flex>
           </Flex>
           <Flex
-            borderTop="1px solid #e0e0e0"
+            borderTop="1px solid transparent"
             w={size.width > 800 ? 500 : 350}
             flexDir="column"
             justify="center"

@@ -1,12 +1,19 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router, { useRouter } from "next/router";
 import { api } from "../services/apiClient";
 
 import { BroadcastChannel } from "broadcast-channel";
 import jwtDecode from "jwt-decode";
-import { useToast } from "@chakra-ui/react";
+import { Flex, Spinner, Text, useToast } from "@chakra-ui/react";
 import { AxiosResponse } from "axios";
+import Loading from "../components/Loading";
 
 type User = {
   _id: string;
@@ -15,6 +22,9 @@ type User = {
   email: string;
   permissions?: string[];
   roles?: string[];
+  utils?: {
+    darkMode: boolean;
+  };
 };
 
 type SignInCredentials = {
@@ -55,6 +65,8 @@ type AuthContextData = {
   updateName: (values: TUpdate) => Promise<any>;
   darkMode: boolean;
   setDarkMode: (value: boolean) => Promise<any>;
+  handleSetDarkMode: (value: boolean) => any;
+  loading: boolean;
 };
 
 type AuthProviderProps = {
@@ -76,13 +88,15 @@ export function signOut() {
 
 export function ContextProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>();
+
+  const [loading, setLoading] = useState(true);
+
   const isAuthenticated = !!user;
 
   const router = useRouter();
   const toast = useToast();
 
   useEffect(() => {
-    
     const { "nextauth.token": token } = parseCookies();
 
     if (!token) {
@@ -91,7 +105,9 @@ export function ContextProvider({ children }: AuthProviderProps) {
       } else if (router.pathname === "/auth/signup") {
         //
       } else {
-        // router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
       }
     } else if (token) {
       // Verify if token is valid
@@ -107,7 +123,6 @@ export function ContextProvider({ children }: AuthProviderProps) {
           router.push("/");
         } else {
           setUser(res.data);
-          router.push("/admin")
         }
       });
 
@@ -166,6 +181,8 @@ export function ContextProvider({ children }: AuthProviderProps) {
         api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
         Router.push("/admin");
+
+        setLoading(false);
 
         return {
           status: "Sucesso!",
@@ -264,6 +281,8 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
     authChannel.postMessage("signOut");
 
+    setLoading(false);
+    handleSetDarkMode(false);
     Router.push("/");
   }
 
@@ -271,15 +290,19 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     isDarkMode();
-  }, [darkMode]);
+  }, [user, darkMode]);
 
   async function setDarkMode(value: boolean) {
     return new Promise((resolve, reject) => {
       if (value === true) {
-        handleSetDarkMode(true);
+        api.post(`/user/darkmode/${user._id}/true`).then((res) => {
+          handleSetDarkMode(true);
+        });
         resolve("Dark.Mode is now true");
       } else if (value === false) {
-        handleSetDarkMode(false);
+        api.post(`/user/darkmode/${user._id}/false`).then((res) => {
+          handleSetDarkMode(false);
+        });
         resolve("Dark.Mode is now false");
       } else {
         reject("Valor invalido");
@@ -289,32 +312,73 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
   async function isDarkMode() {
     return new Promise((resolve, reject) => {
-      if (localStorage.getItem("Dark.Mode") === "true") {
-        resolve("Dark.Mode true");
-        handleSetDarkMode(true);
-      } else if (localStorage.getItem("Dark.Mode") === "false") {
-        resolve("Dark.Mode false");
-        handleSetDarkMode(false);
-      } else {
-        reject("Valor invalido");
+      if (user) {
+        api.get(`/user/darkmode/${user._id}`).then((res) => {
+          if (res.data === true) {
+            handleSetDarkMode(true);
+            setTimeout(() => {
+              setLoading(false);
+            }, 500);
+          } else if (res.data === false) {
+            handleSetDarkMode(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 500);
+          } else {
+            reject("Valor invalido");
+          }
+        });
       }
     });
   }
 
-  return (
-    <Context.Provider
-      value={{
-        signIn,
-        signUp,
-        signOut,
-        updateName,
-        isAuthenticated,
-        user,
-        darkMode,
-        setDarkMode,
-      }}
-    >
-      {children}
-    </Context.Provider>
-  );
+  if (darkMode) {
+    return (
+      <Context.Provider
+        value={{
+          signIn,
+          signUp,
+          signOut,
+          updateName,
+          isAuthenticated,
+          user,
+          darkMode,
+          setDarkMode,
+          handleSetDarkMode,
+          loading,
+        }}
+      >
+        {children}
+        <style jsx global>{`
+          html {
+            background-color: #333;
+          }
+        `}</style>
+      </Context.Provider>
+    );
+  } else {
+    return (
+      <Context.Provider
+        value={{
+          signIn,
+          signUp,
+          signOut,
+          updateName,
+          isAuthenticated,
+          user,
+          darkMode,
+          setDarkMode,
+          handleSetDarkMode,
+          loading,
+        }}
+      >
+        {children}
+        <style jsx global>{`
+          html {
+            background-color: #eee;
+          }
+        `}</style>
+      </Context.Provider>
+    );
+  }
 }

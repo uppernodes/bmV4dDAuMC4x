@@ -15,8 +15,9 @@ import { MdDarkMode } from "react-icons/md";
 import { RiCloseFill, RiUserLine } from "react-icons/ri";
 import { Context } from "../../contexts/ContextProvider";
 
-export default function Header() {
-  const { user, darkMode, setDarkMode } = useContext(Context);
+export default function Header({ none }) {
+  const { user, darkMode, setDarkMode, handleSetDarkMode } =
+    useContext(Context);
 
   const [menu, setMenu] = useState(false);
 
@@ -48,40 +49,24 @@ export default function Header() {
       )}
       <Flex
         align="center"
+        boxShadow="rgba(0,0,0,0.1) 0 0 10px"
         p="4"
-        bg={darkMode ? "#333" : "#eee"}
+        bg={!none && darkMode ? "#333" : "#eee"}
         w="100vw"
         style={{ height: 80 }}
       >
-        <Flex
-          justify="space-between"
-          align="center"
-          w="100%"
-          mx="auto"
-          maxW={1000}
-        >
+        <Flex justify="space-between" align="center" w="100%">
           <Flex align="center">
             <Image
-              src="https://d1e4-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              borderRadius="full"
+              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               mr="2"
             />
-            <Flex
-              onClick={() => setDarkMode(!darkMode)}
-              cursor="pointer"
-              boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-              align="center"
-              p="3"
-              borderRadius="full"
-              flexDir="row"
-            >
-              <Icon as={MdDarkMode} color={darkMode ? "#FFF" : "#333"} />
-              <Flex flexDir="column" align="flex-end"></Flex>
-            </Flex>
           </Flex>
-          <Flex align="center">
-            <Menu>
+          <Flex display={none ? "none" : null} align="center">
+            {/* <Menu>
               <MenuButton
                 borderRadius="full"
                 p="2"
@@ -113,7 +98,7 @@ export default function Header() {
                   justifyContent="space-between"
                   py="4"
                   onClick={() => {
-                    setDarkMode(false);
+                    setDarkMode(!darkMode);
                   }}
                   color="#333"
                   fontSize="sm"
@@ -161,23 +146,42 @@ export default function Header() {
                   Quero criar paginas de vendas
                 </MenuItem>
               </MenuList>
-            </Menu>
-            <Link href="/auth/signup">
-              <Flex
-                cursor="pointer"
-                bg="#F00066"
-                px="4"
-                py="2"
-                ml="4"
-                borderRadius="5"
-                justify="center"
-                align="center"
-              >
-                <Text color="#FFF" fontSize="14" fontWeight="bold">
-                  {user && user._id ? "Dashboard" : "Entrar"}
-                </Text>
-              </Flex>
-            </Link>
+            </Menu> */}
+            {user && user._id ? (
+              <Link href="/admin">
+                <Flex
+                  cursor="pointer"
+                  bg="#F00066"
+                  px="4"
+                  py="2"
+                  ml="4"
+                  borderRadius="5"
+                  justify="center"
+                  align="center"
+                >
+                  <Text color="#FFF" fontSize="14" fontWeight="bold">
+                    Dashboard
+                  </Text>
+                </Flex>
+              </Link>
+            ) : (
+              <Link href="/auth/signup">
+                <Flex
+                  cursor="pointer"
+                  bg="#F00066"
+                  px="4"
+                  py="2"
+                  ml="4"
+                  borderRadius="5"
+                  justify="center"
+                  align="center"
+                >
+                  <Text color="#FFF" fontSize="14" fontWeight="bold">
+                    Entrar
+                  </Text>
+                </Flex>
+              </Link>
+            )}
             {/* <Flex
               onClick={() => setMenu(!menu)}
               justify="center"

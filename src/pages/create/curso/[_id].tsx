@@ -1,10 +1,37 @@
-import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Loading from "../../../components/Loading";
+import { Context } from "../../../contexts/ContextProvider";
+import { api } from "../../../services/apiClient";
 
 export default function Success() {
+  const { user, loading } = useContext(Context);
+
   const router = useRouter();
   const { _id } = router.query;
+
+  const [courseExists, setCourseExists] = useState(false);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    validateCourseCreated();
+  }, [_id]);
+
+  async function validateCourseCreated() {
+    try {
+      await api.get(`/content/course/${_id}`).then((res) => {
+        if (res.data.models.length > 0) {
+          alert(JSON.stringify(res.data))
+        } else {
+          setCourseExists(false);
+        }
+      });
+    } catch (e) {
+        router.push("/");
+    }
+  }
 
   const [message, setMessage] = useState(
     "Aguarde enquanto configuramos o seu projeto"
@@ -24,9 +51,19 @@ export default function Success() {
       setMessage("Seu projeto foi criado com sucesso! 😜");
     }, 20000);
     setTimeout(() => {
-      router.push(`/curso/${_id}`);
+      if (courseExists) {
+        router.push(`/curso/${_id}`);
+      }
     }, 21000);
   }, []);
+
+  if (!user) {
+    return <Loading />;
+  } else if (loading) {
+    return <Loading />;
+  } else if (!courseExists) {
+    return <Loading />;
+  }
 
   return (
     <Flex

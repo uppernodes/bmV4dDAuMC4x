@@ -27,6 +27,7 @@ import { useRouter } from "next/router";
 import Header from "../components/Header";
 import Head from "next/head";
 import { Context } from "../contexts/ContextProvider";
+import Loading from "../components/Loading";
 
 // 404 Illustration
 // by Natasha Kukhalskaya
@@ -38,146 +39,10 @@ export default function NotFound() {
     lg: true,
   });
 
-  const { user, signOut, darkMode, setDarkMode } = useContext(Context);
+  const { user, signOut, darkMode, setDarkMode, loading } = useContext(Context);
 
   const toast = useToast();
   const router = useRouter();
-
-  // function Header() {
-  //   return (
-  //     <Flex
-  //       align="center"
-  //       pt="4"
-  //       p="4"
-  //       bg="#fafafa"
-  //       w="100vw"
-  //       style={{ height: 80 }}
-  //     >
-  //       <Flex
-  //         justify="space-between"
-  //         align="center"
-  //         py="4"
-  //         w="100%"
-  //         mx="auto"
-  //         maxW={1000}
-  //       >
-  //         <Flex align="center">
-  //           <Image
-  //             src="https://06d2-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
-  //             w="45"
-  //             h="45"
-  //             mr="2"
-  //           />
-  //           <Text fontWeight="bold" color="#000">
-  //             uppernodes
-  //           </Text>
-  //         </Flex>
-  //         <Flex align="center">
-  //           <Menu>
-  //             <MenuButton
-  //               mt="1"
-  //               borderRadius="full"
-  //               p="2"
-  //               _hover={{
-  //                 height: 40,
-  //                 width: 40,
-  //                 backgroundColor: "#eee",
-  //               }}
-  //               style={{
-  //                 height: 40,
-  //                 width: 40,
-  //               }}
-  //               ml="5"
-  //             >
-  //               <Icon
-  //                 mt="1"
-  //                 as={RiUserLine}
-  //                 cursor="pointer"
-  //                 color="#000"
-  //                 fontSize="20"
-  //               />
-  //             </MenuButton>
-  //             <MenuList
-  //               bg="#f0f0f0"
-  //               boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-  //               py="0"
-  //             >
-  //               <MenuItem
-  //                 _hover={{
-  //                   backgroundColor: "#e0e0e0",
-  //                   borderRadius: 5,
-  //                 }}
-  //                 justifyContent="space-between"
-  //                 py="4"
-  //                 onClick={() => {}}
-  //                 color="#333"
-  //                 fontSize="sm"
-  //               >
-  //                 Quero saber mais
-  //               </MenuItem>
-  //               <MenuItem
-  //                 _hover={{
-  //                   backgroundColor: "#e0e0e0",
-  //                   borderRadius: 5,
-  //                 }}
-  //                 justifyContent="space-between"
-  //                 py="4"
-  //                 onClick={() => {}}
-  //                 color="#333"
-  //                 fontSize="sm"
-  //               >
-  //                 Quero vender meu curso
-  //               </MenuItem>
-  //               <MenuItem
-  //                 _hover={{
-  //                   backgroundColor: "#e0e0e0",
-  //                   borderRadius: 5,
-  //                 }}
-  //                 justifyContent="space-between"
-  //                 py="4"
-  //                 onClick={() => {}}
-  //                 color="#333"
-  //                 fontSize="sm"
-  //               >
-  //                 Quero vender meu ebook
-  //               </MenuItem>
-  //               <MenuItem
-  //                 _hover={{
-  //                   backgroundColor: "#e0e0e0",
-  //                   borderRadius: 5,
-  //                 }}
-  //                 justifyContent="space-between"
-  //                 py="4"
-  //                 onClick={() => {}}
-  //                 color="#333"
-  //                 fontSize="sm"
-  //               >
-  //                 Quero uma paginas de venda
-  //               </MenuItem>
-  //             </MenuList>
-  //           </Menu>
-  //           <Link href="/auth/signup">
-  //             <Flex
-  //               cursor="pointer"
-  //               px="4"
-  //               py="2"
-  //               ml="4"
-  //               borderRadius="5"
-  //               bg="#F00066"
-  //               justify="center"
-  //               align="center"
-  //               fontSize="14"
-  //               color="#FFF"
-  //               fontWeight="bold"
-  //             >
-  //               Contate-nos
-  //             </Flex>
-  //           </Link>
-  //         </Flex>
-  //       </Flex>
-  //     </Flex>
-  //   );
-  // }
 
   function Content() {
     return (
@@ -200,48 +65,31 @@ export default function NotFound() {
           align="center"
           maxW={700}
           mx="auto"
-        >
-          <Flex
-            borderRadius="full"
-            px="12"
-            py="4"
-            w="100%"
-            bg="#FFF"
-            justify="center"
-            align="center"
-            boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-            color="#744CC6"
-            fontFamily="'Comfortaa', cursive"
-            fontWeight="bold"
-            fontSize="lg"
-          >
-            Página não encontrada
-          </Flex>
-        </Flex>
-        <Flex flexDir="column">
+        ></Flex>
+        <Flex flexDir="column" w="100%">
           <Text
             mt="4"
-            color="#744CC6"
+            color={darkMode ? "#FFF" : "#744CC6"}
             fontFamily="'Comfortaa', cursive"
             fontWeight="bold"
             w="100%"
             textAlign="left"
-            fontSize={isWideVersion ? "5xl" : "4xl"}
+            fontSize="7xl"
           >
-            Oops
+            Eita
           </Text>
           <Text
             w="100%"
             textAlign="left"
-            color="#744CC6"
+            color={darkMode ? "#FFF" : "#744CC6"}
             fontFamily="'Comfortaa', cursive"
-            fontSize={isWideVersion ? "3xl" : "xl"}
+            fontSize={isWideVersion ? "xl" : "xl"}
           >
-            Algo de errado não está certo!
+            Página não encontrada
           </Text>
         </Flex>
         <Image
-          src="https://f5a5-168-228-216-82.sa.ngrok.io/images/404.png"
+          src="https://b488-168-228-216-82.sa.ngrok.io/images/404.png"
           mr="2"
           mx="10"
           maxW={isWideVersion ? 500 : 350}
@@ -253,7 +101,7 @@ export default function NotFound() {
           >
             <Text
               cursor="pointer"
-              color="#F00066"
+              color="#744CC6"
               fontSize="md"
               fontWeight="bold"
               fontFamily="'Quicksand', sans-serif"
@@ -264,7 +112,7 @@ export default function NotFound() {
           <Link href="https://dribbble.com/natashakukhalskaya" passHref={true}>
             <Text
               cursor="pointer"
-              color="#F00066"
+              color="#744CC6"
               fontWeight="semibold"
               fontSize="xs"
               fontFamily="'Quicksand', sans-serif"
@@ -284,7 +132,7 @@ export default function NotFound() {
           cursor="pointer"
           mt="4"
           w="100%"
-          maxW={700}
+          maxW={1000}
           textAlign="left"
           borderRadius="5"
           px="6"
@@ -310,7 +158,6 @@ export default function NotFound() {
         flexDir="row"
         p="4"
         w="100%"
-        maxW={1000}
         mx="auto"
         boxShadow="rgba(0,0,0,0.1) 0 0 10px"
         borderRadius="5"
@@ -390,16 +237,30 @@ export default function NotFound() {
     );
   }
 
+  if (!user) {
+    return <Loading />;
+  } else {
+    if (loading) {
+      return <Loading />;
+    }
+  }
+
   return (
     <>
-      <Flex flex="1" flexDir="column" h="100vh" bg={darkMode ? "#333" : "#eee"} justifyContent="space-between">
+      <Flex
+        flex="1"
+        flexDir="column"
+        h="100vh"
+        bg={darkMode ? "#333" : "#eee"}
+        justifyContent="space-between"
+      >
         <Head>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
           />
         </Head>
-        <Header />
+        <Header none={false} />
         <Content />
         <Footer />
       </Flex>
