@@ -95,7 +95,7 @@ export default function Forgot() {
         >
           <Flex align="center">
             <Image
-              src="https://06d2-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               ml={-5}

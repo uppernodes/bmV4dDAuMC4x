@@ -67,9 +67,11 @@ import { Context } from "../../contexts/ContextProvider";
 
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
+import Loading from "../../components/Loading";
+import Head from "next/head";
 
 export default function Landing() {
-  const { user, signOut, darkMode, setDarkMode } = useContext(Context);
+  const { user, signOut, darkMode, setDarkMode, loading } = useContext(Context);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -1235,7 +1237,7 @@ export default function Landing() {
             w="100%"
             textAlign="left"
             fontWeight="medium"
-            fontSize={size.width < 1000 ? "2xl" :"4xl"}
+            fontSize={size.width < 1000 ? "2xl" : "4xl"}
             maxW={900}
           >
             Acesso a educação a distância para todos.
@@ -1322,41 +1324,23 @@ export default function Landing() {
     );
   }
 
-  if (!user) {
-    return (
-      <Flex
-        flexDir="column"
-        bg={darkMode ? "#333" : "#eee"}
-        w="100vw"
-        h="100vh"
-        justify="center"
-        align="center"
-      >
-        <Spinner color="#333" size="xl" />
-        <Text color="#333" mt="4" fontSize="xl">
-          Aguarde enquanto carregamos seu conteúdo
-        </Text>
-      </Flex>
-    );
-  }
-
   function Sidebar() {
     function Item({ title, icon, color }) {
       return (
         <Flex
           onClick={() => {
-            if(title === "Dashboard") {
-              router.push("/dashboard")
+            if (title === "Dashboard") {
+              router.push("/dashboard");
             } else if (title === "Accounts") {
-              router.push("/accounts")
+              router.push("/accounts");
             } else if (title === "Courses") {
-              router.push("/courses")
+              router.push("/courses");
             } else if (title === "Projects") {
-              router.push("/projects")
+              router.push("/projects");
             } else if (title === "Discounts") {
-              router.push("/discounts")
+              router.push("/discounts");
             } else {
-              onOpen()
+              onOpen();
             }
           }}
           onMouseOver={() => {
@@ -1394,9 +1378,8 @@ export default function Landing() {
       <Flex
         flexDir="column"
         justify="space-between"
-        px="4"       
-           pb="4"
-
+        px="4"
+        pb="4"
         boxShadow="rgba(0,0,0,0.03) 0 0 10px"
         position="fixed"
         style={{
@@ -1429,8 +1412,18 @@ export default function Landing() {
     );
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
+        />
+      </Head>
       <Sidebar />
       <TopNav />
 
@@ -1440,7 +1433,6 @@ export default function Landing() {
         }}
         flexDir="column"
         bg={darkMode ? "#333" : "#eee"}
-        h="100vh"
         style={{
           paddingLeft: 80,
         }}

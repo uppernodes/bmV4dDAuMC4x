@@ -42,7 +42,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { api } from "../services/apiClient";
 
-import { MdTouchApp } from "react-icons/md";
+import { MdDarkMode, MdTouchApp } from "react-icons/md";
 
 import Header from "../components/Header";
 import {
@@ -58,9 +58,12 @@ import {
   RiYoutubeFill,
 } from "react-icons/ri";
 import Head from "next/head";
+import { Html, Main, NextScript } from "next/document";
+import Loading from "../components/Loading";
 
 export default function Index() {
-  const { user, signOut } = useContext(Context);
+  const { user, signOut, darkMode, handleSetDarkMode, setDarkMode, loading } =
+    useContext(Context);
 
   const [playing, setPlaying] = useState(true);
 
@@ -69,6 +72,8 @@ export default function Index() {
   const size = useWindowSize();
 
   const router = useRouter();
+
+  const [over, setOver] = useState("");
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -114,7 +119,16 @@ export default function Index() {
 
   function Banner() {
     return (
-      <Flex flexDir="column" p="4" w="100%" bg="#999">
+      <Flex
+        mt="4"
+        flexDir="column"
+        borderRadius="5"
+        p="4"
+        w={size.width - 50}
+        maxW={1000}
+        mx="auto"
+        bg="#999"
+      >
         <Flex justify="space-between" w="100%" align="center">
           <Text color="#FFF" fontWeight="bold" fontSize="20" w="80%">
             Coronavirus (COVID-19) resources and updates
@@ -138,11 +152,71 @@ export default function Index() {
     );
   }
 
+  function DarkMode() {
+    return (
+      <Flex w="100%" maxWidth={user ? "100vw" : 1000} mx="auto">
+        <Flex
+          ml={user ? "4" : size.width < 1000 && "4"}
+          mt="4"
+          onMouseOver={() => {
+            setOver("Darkmode");
+          }}
+          onClick={() => {
+            if (user) {
+              setDarkMode(!darkMode);
+            } else {
+              handleSetDarkMode(!darkMode);
+            }
+          }}
+          cursor="pointer"
+          boxShadow={
+            darkMode
+              ? "rgba(200,200,200,0.1) 0 0 10px"
+              : "rgba(0,0,0,0.1) 0 0 10px"
+          }
+          align="center"
+          justify={over === "Darkmode" ? "space-between" : "center"}
+          p="4"
+          mb="4"
+          style={{
+            height: 45,
+            width: over === "Darkmode" ? 200 : 45,
+          }}
+          borderRadius="full"
+          flexDir="row"
+        >
+          <Icon as={MdDarkMode} color={darkMode ? "#FFF" : "#333"} />
+          {over === "Darkmode" && (
+            <Text
+              fontWeight="bold"
+              color={darkMode ? "#FFF" : "#333"}
+              fontSize="xs"
+            >
+              {darkMode
+                ? "Experimente o modo light"
+                : "Experimente o modo dark"}
+            </Text>
+          )}
+        </Flex>
+      </Flex>
+    );
+  }
+
   function Apresentation() {
     return (
-      <Flex flexDir="column" mx="auto" w={size.width - 50} maxWidth={1000}>
+      <Flex
+        onMouseOver={() => {
+          if (over !== "DarkMode") {
+            setOver("");
+          }
+        }}
+        flexDir="column"
+        mx="auto"
+        w={size.width - 50}
+        maxWidth={user ? "100vw" : 1000}
+      >
         <Text
-          color="#333"
+          color={darkMode ? "#FFF" : "#333"}
           fontWeight="bold"
           fontSize={isWideVersion ? "4xl" : "3xl"}
           w={isWideVersion ? "60%" : "100%"}
@@ -151,7 +225,11 @@ export default function Index() {
             ? `Olá ${user.name.split(" ")[0]}`
             : "A plataforma completa para transformar criadores de conteúdo em empreendedores"}
         </Text>
-        <Text color="#333" fontSize="lg" w={isWideVersion ? "60%" : "100%"}>
+        <Text
+          color={darkMode ? "#FFF" : "#333"}
+          fontSize="lg"
+          w={isWideVersion ? "60%" : "100%"}
+        >
           {user && user._id
             ? `Acesse sua dashboard para controlar seus produtos, vendas e usuários`
             : "Crie seus produtos, acelere suas vendas, gerencie seus resultados e escale seu negócio digital."}
@@ -182,7 +260,7 @@ export default function Index() {
         {!user && (
           <Text
             mt="4"
-            color="#333"
+            color={darkMode ? "#FFF" : "#333"}
             fontSize="xs"
             w={isWideVersion ? "60%" : "100%"}
           >
@@ -402,10 +480,11 @@ export default function Index() {
     return (
       <Flex
         borderRadius="5"
+        boxShadow="rgba(255,255,255,0.1) 0 0 10px"
         px="5"
         pt="5"
-        bg="#000"
-        mt="10"
+        bg={darkMode ? "#FAFAFA" : "#000"}
+        mb="10"
         w={size.width - 50}
         maxW={1000}
         mx="auto"
@@ -425,7 +504,7 @@ export default function Index() {
           justify="space-between"
         >
           <Text
-            color="#FFF"
+            color={darkMode ? "#333" : "#FFF"}
             fontWeight="bold"
             fontSize={isWideVersion ? "3xl" : "xl"}
           >
@@ -434,17 +513,17 @@ export default function Index() {
           </Text>
           <Flex
             fontWeight="bold"
-            color="#333"
+            color={darkMode ? "#FFF" : "#333"}
             _hover={{
-              backgroundColor: "#555",
+              backgroundColor: "#eee",
               transition: "0.2s",
-              color: "#FFF",
+              color: darkMode ? "#333" : "#FFF",
             }}
             mt="4"
             cursor="pointer"
             justify="center"
             align="center"
-            bg="#FFF"
+            bg={darkMode ? "#000" : "#FFF"}
             style={{ width: "100%", height: 50 }}
             borderRadius="5"
           >
@@ -461,24 +540,27 @@ export default function Index() {
         flexDir="column"
         borderRadius="5"
         p="5"
-        my="10"
+        mt="10"
         mx="auto"
-        w={size.width - 50}
-        maxWidth={1000}
-        boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+        w={size.width}
+        boxShadow={
+          darkMode
+            ? "rgba(155,155,155,0.1) 0 0 10px"
+            : "rgba(0,0,0,0.1) 0 0 10px"
+        }
       >
-        <Text color="#000" fontSize="sm">
+        <Text color={darkMode ? "#FFF" : "#000"} fontSize="sm">
           Termos e Politicas
         </Text>
-        <Text mt="4" color="#555" fontSize="sm">
+        <Text mt="4" color={darkMode ? "#AAA" : "#555"} fontSize="sm">
           uppernodes — 2022 © Todos os direitos reservados
         </Text>
-        <Text mt="4" color="#555" fontSize="sm">
+        <Text mt="4" color={darkMode ? "#AAA" : "#555"} fontSize="sm">
           uppernodes co.
-          <Text color="#555" fontSize="sm">
+          <Text color={darkMode ? "#AAA" : "#555"} fontSize="sm">
             CNPJ nº. 11.233.455/0000-22
           </Text>
-          <Text color="#555" fontSize="sm">
+          <Text color={darkMode ? "#AAA" : "#555"} fontSize="sm">
             Contato: uppernodes@gmail.com
           </Text>
         </Text>
@@ -488,8 +570,18 @@ export default function Index() {
 
   function FAQ() {
     return (
-      <Flex my="10" maxW={1000} w={size.width - 50} borderRadius="5" mx="auto">
-        <Accordion bg="#000" w="100%" borderRadius="5">
+      <Flex my="20" maxW={1000} w={size.width - 50} borderRadius="5" mx="auto">
+        <Accordion
+          bg={darkMode ? "#FFF" : "#000"}
+          w="100%"
+          borderRadius="5"
+          border="0px solid transparent"
+          boxShadow={
+            darkMode
+              ? "rgba(155,155,155,0.1) 0 0 10px"
+              : "rgba(0,0,0,0.1) 0 0 10px"
+          }
+        >
           <AccordionItem py="5" borderRadius="5">
             <h2>
               <AccordionButton
@@ -499,6 +591,7 @@ export default function Index() {
               >
                 <Flex flexDir="column" w="100%">
                   <Box
+                    color={darkMode ? "#333" : "#FFF"}
                     flex="1"
                     textAlign="left"
                     fontSize="xl"
@@ -506,14 +599,19 @@ export default function Index() {
                   >
                     Qual servico a uppernodes oferece?
                   </Box>
-                  <Box flex="1" textAlign="left" fontSize="md">
+                  <Box
+                    flex="1"
+                    textAlign="left"
+                    fontSize="md"
+                    color={darkMode ? "#555" : "#FFF"}
+                  >
                     1 minuto de leitura
                   </Box>
                 </Flex>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
+            <AccordionPanel pb={4} color={darkMode ? "#555" : "#FFF"}>
               Somos uma plataforma completa. Do suporte ao cliente, passando por
               dados, relatórios e sistema de pagamento, nós vamos cobrir tudo!
               Todas as nossas soluções são criadas e pensadas para os nossos
@@ -531,6 +629,7 @@ export default function Index() {
               >
                 <Flex flexDir="column" w="100%">
                   <Box
+                    color={darkMode ? "#333" : "#FFF"}
                     flex="1"
                     textAlign="left"
                     fontSize="xl"
@@ -542,7 +641,7 @@ export default function Index() {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
+            <AccordionPanel pb={4} color={darkMode ? "#333" : "#FFF"}>
               A uppernodes não cobra taxas de adesão e nem mensalidades. Para
               montar todo o seu negócio digital na uppernodes, você não paga
               nada, apenas uma porcentagem por cada venda realizada.
@@ -553,28 +652,51 @@ export default function Index() {
     );
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <Flex flex="1" flexDir="column">
+    <>
       <Head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
         />
       </Head>
-      <Header />
-      {banner && <Banner />}
-      <Apresentation />
-      {user ? (
-        <></>
-      ) : (
-        <>
-          <Marketplace />
-          <Dashboard />
-          <FAQ />
-        </>
-      )}
-      <Footer />
-    </Flex>
+      <Flex
+        flex="1"
+        flexDir="column"
+        justify="space-between"
+        h="100vh"
+        bg={darkMode ? "#333" : "#EEE"}
+      >
+        <Flex flexDir="column">
+          <Flex
+            onMouseOver={() => {
+              if (over !== "DarkMode") {
+                setOver("");
+              }
+            }}
+          >
+            <Header none={false} />
+          </Flex>
+          {banner && <Banner />}
+          <DarkMode />
+          <Apresentation />
+          {user ? (
+            <></>
+          ) : (
+            <>
+              <Marketplace />
+              <FAQ />
+              <Dashboard />
+            </>
+          )}
+        </Flex>
+        <Footer />
+      </Flex>
+    </>
   );
 }
 

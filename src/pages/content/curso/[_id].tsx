@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Header from "../../components/Header";
-import { api } from "../../services/apiClient";
+import Header from "../../../components/Header";
+import { api } from "../../../services/apiClient";
 import { string } from "yup";
-import TopNav from "../../components/TopNav";
+import TopNav from "../../../components/TopNav";
 import { RiDeleteBin4Line, RiEditLine, RiShareLine } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 
@@ -78,27 +78,33 @@ export default function UserId() {
 
   const [course, setCourse] = useState<Course | null>();
 
+  useEffect(() => {
+    handleGetCourseById();
+  }, [_id]);
+
   async function handleGetCourseById() {
     try {
-      if (_id) {
-        await api.get(`/content/course/${_id}`).then((res) => {
-          if (res.status === 200) {
-            setCourse(res.data);
-            setLoading(false);
-          } else if (res.status === 500) {
-            toast({
-              status: "error",
-              description: "Curso não encontrado",
-            });
-          }
-        });
-        // setCourse(response.data);
-        setLoading(false);
-      } else {
-        toast({
-          status: "error",
-          description: "Curso não encontrado",
-        });
+      if (router.pathname === "/curso") {
+        if (_id) {
+          await api.get(`/content/course/${_id}`).then((res) => {
+            if (res.status === 200) {
+              setCourse(res.data);
+              setLoading(false);
+            } else if (res.status === 500) {
+              toast({
+                status: "error",
+                description: "Curso não encontrado",
+              });
+            }
+          });
+          // setCourse(response.data);
+          setLoading(false);
+        } else {
+          toast({
+            status: "error",
+            description: "Curso não encontrado",
+          });
+        }
       }
     } catch (err) {
       toast({
@@ -109,27 +115,8 @@ export default function UserId() {
     }
   }
 
-  useEffect(() => {
-    handleGetCourseById();
-  }, [_id]);
 
-  if (loading) {
-    return (
-      <Flex
-        flexDir="column"
-        bg="#EEE"
-        w="100vw"
-        h="100vh"
-        justify="center"
-        align="center"
-      >
-        <Spinner color="#333" size="xl" />
-        <Text color="#333" mt="4" fontSize="xl">
-          Aguarde enquanto carregamos seu conteúdo...
-        </Text>
-      </Flex>
-    );
-  }
+  
   return (
     <>
       <TopNav />
