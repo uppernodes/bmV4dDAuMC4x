@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { parseCookies, setCookie } from "nookies";
-import { signOut } from "../contexts/AuthContext";
+import { signOut } from "../contexts/ContextProvider";
 import { AuthTokenError } from "../errors/AuthTokenError";
 
 let isRefreshing = false;
@@ -10,7 +10,7 @@ export function setupAPIClient(ctx = null) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: "https://f5a5-168-228-216-82.sa.ngrok.io",
+    baseURL: "https://d1e4-168-228-216-82.sa.ngrok.io",
     headers: {
       Authorization: `Bearer ${cookies["nextauth.token"]}`,
     },

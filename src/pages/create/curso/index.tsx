@@ -33,11 +33,11 @@ import { BiChevronDown, BiListPlus, BiUserPlus } from "react-icons/bi";
 import { RiAlertLine, RiCloseFill, RiInformationLine } from "react-icons/ri";
 import NumberFormat from "react-number-format";
 import TopNav from "../../../components/TopNav";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { Context } from "../../../contexts/ContextProvider";
 import { api } from "../../../services/apiClient";
 
 export default function Curso() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(Context);
 
   type Course = {
     _id: string;

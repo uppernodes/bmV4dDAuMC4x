@@ -21,10 +21,10 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
 
 export default function Auth() {
-  const { user, signIn, signUp } = useContext(AuthContext);
+  const { user, signIn, signUp } = useContext(Context);
 
   const router = useRouter();
   const toast = useToast();

@@ -37,12 +37,22 @@ import {
   FiFolderPlus,
   FiPlusSquare,
 } from "react-icons/fi";
-import { MdSettings, MdSettingsApplications, MdStore } from "react-icons/md";
+import {
+  MdDashboardCustomize,
+  MdLibraryBooks,
+  MdManageAccounts,
+  MdSettings,
+  MdSettingsApplications,
+  MdStore,
+} from "react-icons/md";
 import {
   RiArrowDropDownFill,
   RiMenu2Line,
   RiMenuLine,
+  RiMessengerFill,
   RiNotification2Line,
+  RiPagesFill,
+  RiPriceTagFill,
   RiPulseLine,
   RiSearch2Line,
   RiShareLine,
@@ -50,12 +60,16 @@ import {
   RiUser3Line,
   RiUserFill,
   RiVideoUploadLine,
+  RiWhatsappFill,
 } from "react-icons/ri";
 import TopNav from "../../components/TopNav";
-import { AuthContext, signOut } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
+
+import dynamic from "next/dynamic";
+import { ApexOptions } from "apexcharts";
 
 export default function Landing() {
-  const { user, signOut } = useContext(AuthContext);
+  const { user, signOut, darkMode, setDarkMode } = useContext(Context);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -71,12 +85,15 @@ export default function Landing() {
 
   const [tarefa, setTarefa] = useState(false);
 
+  const [over, setOver] = useState("");
+
   const isWideVersion = useBreakpointValue({
     base: false,
     md: true,
     lg: true,
   });
 
+  const router = useRouter();
   const size = useWindowSize();
 
   function useWindowSize() {
@@ -113,6 +130,65 @@ export default function Landing() {
     return windowSize;
   }
 
+  const Chart = dynamic(() => import("react-apexcharts"), {
+    ssr: false,
+  });
+
+  const series = [
+    {
+      name: "series1",
+      data: [31, 120, 10, 28, 51, 18, 109],
+    },
+  ];
+
+  const options: ApexOptions = {
+    chart: {
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false,
+      },
+      foreColor: "#333",
+    },
+    grid: {
+      show: false,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    tooltip: {
+      enabled: false,
+    },
+    xaxis: {
+      type: "datetime",
+      axisBorder: {
+        color: "#333",
+      },
+      axisTicks: {
+        color: "#333",
+      },
+      categories: [
+        "2021-03-18T00:00:00.000Z",
+        "2021-03-19T00:00:00.000Z",
+        "2021-03-20T00:00:00.000Z",
+        "2021-03-21T00:00:00.000Z",
+        "2021-03-22T00:00:00.000Z",
+        "2021-03-23T00:00:00.000Z",
+        "2021-03-24T00:00:00.000Z",
+      ],
+    },
+    fill: {
+      opacity: 0.3,
+      type: "gradient",
+      gradient: {
+        shade: "dark",
+        opacityFrom: 0.7,
+        opacityTo: 0.5,
+      },
+    },
+  };
+
   function Header() {
     return (
       <Flex
@@ -140,7 +216,11 @@ export default function Landing() {
             uppernodes
           </Text>
           <Flex
-            style={{ height: 50, width: 1, backgroundColor: "#eee" }}
+            style={{
+              height: 50,
+              width: 1,
+              backgroundColor: darkMode ? "#333" : "#eee",
+            }}
             mx="5"
           />
           {isWideVersion && (
@@ -200,7 +280,7 @@ export default function Landing() {
             <MenuList
               boxShadow="rgba(0,0,0,0.1) 0 0 10px"
               zIndex="2"
-              bg="#eee"
+              bg={darkMode ? "#333" : "#eee"}
               style={{ height: "40vh" }}
             ></MenuList>
           </Menu>
@@ -216,18 +296,22 @@ export default function Landing() {
             <MenuList
               boxShadow="rgba(0,0,0,0.1) 0 0 10px"
               zIndex="2"
-              bg="#eee"
+              bg={darkMode ? "#333" : "#eee"}
               style={{ height: "40vh" }}
             ></MenuList>
           </Menu>
           <Menu>
             <MenuButton>
-              <Avatar name={user ? user.name : "A"} size="sm" />
+              <Avatar
+                src="https://github.com/0xrfsd.png"
+                name={user ? user.name : "A"}
+                size="sm"
+              />
             </MenuButton>
             <MenuList
               boxShadow="rgba(0,0,0,0.1) 0 0 10px"
               zIndex="2"
-              bg="#eee"
+              bg={darkMode ? "#333" : "#eee"}
               py="0"
             >
               <MenuItem
@@ -264,7 +348,11 @@ export default function Landing() {
               <MenuButton ml="5">
                 <Icon as={RiMenuLine} fontSize="22" color="#333" />
               </MenuButton>
-              <MenuList boxShadow="rgba(0,0,0,0.1) 0 0 10px" bg="#eee" py="0">
+              <MenuList
+                boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+                bg={darkMode ? "#333" : "#eee"}
+                py="0"
+              >
                 <MenuItem
                   justifyContent="space-between"
                   py="4"
@@ -575,7 +663,13 @@ export default function Landing() {
             <Text color="#333">Produtos</Text>
             <Text color="#333">Receita</Text>
           </Flex>
-          <div style={{ height: 1, width: "100%", backgroundColor: "#eee" }} />
+          <div
+            style={{
+              height: 1,
+              width: "100%",
+              backgroundColor: darkMode ? "#333" : "#eee",
+            }}
+          />
           <Flex flexDir="column" justify="space-between">
             {products.map((product, i) => {
               return (
@@ -876,7 +970,7 @@ export default function Landing() {
                     <Flex
                       align="center"
                       justify="center"
-                      bg="#eee"
+                      bg={darkMode ? "#333" : "#eee"}
                       cursor="pointer"
                       style={{ height: 25, width: 25 }}
                       borderRadius="5"
@@ -1046,7 +1140,7 @@ export default function Landing() {
                             </Text>
                             <Flex align="center">
                               <Flex
-                                bg="#eee"
+                                bg={darkMode ? "#333" : "#eee"}
                                 borderRadius="full"
                                 py="0.5"
                                 px="4"
@@ -1099,168 +1193,65 @@ export default function Landing() {
     );
   }
 
-  function SearchBar() {
+  function ContentCard() {
     return (
       <Flex
-        w="100%"
+        mx={size.width < 1200 && "auto"}
+        mt="5"
+        px={size.width > 1200 ? "6" : size.width < 700 ? "6" : null}
+        borderRadius="5"
         style={{
-          paddingTop: 80,
+          maxWidth: size.width > 1200 ? 450 : 900,
+          width: "100%",
+          height: 300,
         }}
-        px="4"
-        align="center"
+        boxShadow="rgba(100,100,100,0.1) 0 0 10px"
+        bg={darkMode ? "#3A3A3A" : "transparent"}
+        p="6"
         justify="space-between"
-      >
-        <Menu>
-          <MenuButton>
-            <Flex
-              boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-              border="1px solid #e0e0e0"
-              style={{
-                height: 50,
-                width: 300,
-              }}
-              borderRadius="5"
-              bg="#FFF"
-              align="center"
-              justify="space-between"
-              px="4"
-            >
-              <Text color="#333" fontWeight="bold">
-                Adicionar
-              </Text>
-              <Text color="#333" cursor="pointer" fontWeight="bold">
-                Curso
-              </Text>
-              <Text color="#333" cursor="pointer" fontWeight="bold">
-                E-Book
-              </Text>
-              <Flex
-                cursor="pointer"
-                border="1px solid #e0e0e0"
-                bg="#333"
-                justify="center"
-                align="center"
-                p="4"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                borderRadius="full"
-              >
-                <Icon as={BiListPlus} color="#FFF" fontSize="18" />
-              </Flex>
-            </Flex>
-          </MenuButton>
-          <MenuList
-            style={{
-              width: 300,
-            }}
-            boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-            mt="1"
-            bg="#FFF"
-            borderRadius="5"
-            zIndex="3"
-            border="1px solid #e0e0e0"
-            py="0"
-          >
-            <Link href="/create/curso">
-              <MenuItem
-                _focus={{
-                  borderRadius: 5,
-                  backgroundColor: "#eee",
-                }}
-                _hover={{
-                  borderRadius: 5,
-                  backgroundColor: "#eee",
-                }}
-                justifyContent="space-between"
-                py="4"
-                borderRadius="5"
-                color="#333"
-                fontSize="sm"
-              >
-                Adicionar Curso
-              </MenuItem>
-            </Link>
-            <MenuItem
-              _hover={{
-                borderRadius: 5,
-                backgroundColor: "#eee",
-              }}
-              borderRadius="5"
-              justifyContent="space-between"
-              py="4"
-              onClick={() => {
-                signOut();
-              }}
-              color="#333"
-              fontSize="sm"
-            >
-              Adicionar E-Book
-            </MenuItem>
-          </MenuList>
-        </Menu>
-        <Flex align="center">
-          <Menu>
-            <MenuButton>
-              <Flex
-                ml="4"
-                cursor="pointer"
-                boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-                style={{
-                  height: 50,
-                  width: 50,
-                }}
-                bg="#fff"
-                align="center"
-                justify="center"
-                borderRadius="full"
-              >
-                <Icon as={RiVideoUploadLine} color="#333" fontSize="18" />
-              </Flex>
-            </MenuButton>
-            <MenuList
-              style={{
-                width: 300,
-                height: 300,
-              }}
-              boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-              mt="1"
-              bg="#FFF"
-              borderRadius="5"
-              zIndex="3"
-              border="1px solid #e0e0e0"
-              py="0"
-            ></MenuList>
-          </Menu>
-        </Flex>
-      </Flex>
+        align="center"
+      ></Flex>
     );
   }
 
   function Content() {
     return (
       <Flex
-        w={isWideVersion ? "40vw" : "100%"}
+        style={{
+          maxWidth: size.width > 1200 ? 450 : 900,
+          width: "100%",
+        }}
         px="auto"
+        mx={size.width < 1200 && "auto"}
+        mt={size.width < 1200 && "6"}
         flexDir="column"
         justify="center"
         align="center"
         pr="10"
       >
+        <Flex flexDir="column" w="100%">
+          <Text
+            color={darkMode ? "#FFF" : "#000"}
+            w="100%"
+            textAlign="left"
+            fontWeight="medium"
+            fontSize={size.width < 1000 ? "2xl" :"4xl"}
+            maxW={900}
+          >
+            Acesso a educação a distância para todos.
+          </Text>
+        </Flex>
         <Text
-          color="#000"
+          color={darkMode ? "#FFF" : "#000"}
           w="100%"
-          textAlign="center"
-          fontSize={isWideVersion ? "4xl" : "3xl"}
-          maxW={600}
+          fontWeight="thin"
+          textAlign="left"
+          fontSize="lg"
+          maxW={900}
         >
-          Acesso a educação a distância para todos. Agora gratuito para todos.
-        </Text>
-        <Text color="#000" w="100%" textAlign="center" fontSize="sm" maxW={600}>
           Com nossos serviços de criação de cursos com módulos e aulas
           personalizadas você consegue além de fazer disso uma fonte de renda
-          espalhar conhecimento pelo mundo.
+          compartilhar conhecimento.
         </Text>
       </Flex>
     );
@@ -1303,18 +1294,6 @@ export default function Landing() {
     );
   }
 
-  function SearchResults() {
-    return (
-      <Flex
-        style={{
-          height: 200,
-          width: "100%",
-        }}
-        bg="#e0e0e0"
-      ></Flex>
-    );
-  }
-
   // if (!user) {
   //   return (
   //     <Flex justify="center" align="center" h="100vh" w="100vw">
@@ -1343,26 +1322,11 @@ export default function Landing() {
     );
   }
 
-  function ContentCard() {
-    return (
-      <Flex
-        mt="4"
-        borderRadius="5"
-        style={{
-          width: isWideVersion ? 600 : "100%",
-          height: 300,
-        }}
-        boxShadow="rgba(0,0,0,0.1) 0 0 10px"
-        bg="#FFF"
-      ></Flex>
-    );
-  }
-
   if (!user) {
     return (
       <Flex
         flexDir="column"
-        bg="#EEE"
+        bg={darkMode ? "#333" : "#eee"}
         w="100vw"
         h="100vh"
         justify="center"
@@ -1370,173 +1334,274 @@ export default function Landing() {
       >
         <Spinner color="#333" size="xl" />
         <Text color="#333" mt="4" fontSize="xl">
-          Aguarde enquanto carregamos seu conteúdo...
+          Aguarde enquanto carregamos seu conteúdo
         </Text>
       </Flex>
     );
   }
 
-  return (
-    <Flex flexDir="column" bg="#eee" h="100vh">
-      <TopNav />
-      <SearchBar />
-      <Flex flexDir="column" p="4">
-        {!isWideVersion ? (
-          <>
-            <Content />
-            <ContentCard />
-          </>
-        ) : (
-          <>
-            <Flex w="100%" justify="center" mt="4" align="center">
-              <Content />
-              <ContentCard />
-              {/* <Image
-                src="https://github.com/ricardofsdomene.png"
-                style={{
-                  borderRadius: 5,
-                  width: size.width / 2 - 50,
-                }}
-              /> */}
-            </Flex>
-          </>
-        )}
-      </Flex>
-      <Drawer
-        isOpen={true}
-        placement="bottom"
-        onClose={() => {
-          onClose();
-          setPublicacao(false);
-          setCurso(false);
-          setProduto(false);
-        }}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent
-          height={size.height - 80}
-          bg="#eee"
-          borderTopLeftRadius="10"
-          borderTopRightRadius="10"
+  function Sidebar() {
+    function Item({ title, icon, color }) {
+      return (
+        <Flex
+          onClick={() => {
+            if(title === "Dashboard") {
+              router.push("/dashboard")
+            } else if (title === "Accounts") {
+              router.push("/accounts")
+            } else if (title === "Courses") {
+              router.push("/courses")
+            } else if (title === "Projects") {
+              router.push("/projects")
+            } else if (title === "Discounts") {
+              router.push("/discounts")
+            } else {
+              onOpen()
+            }
+          }}
+          onMouseOver={() => {
+            setOver(title);
+          }}
+          _hover={{
+            cursor: "pointer",
+            textDecorationLine: "underline",
+            fontWeight: "bold",
+          }}
+          p="4"
+          mb="4"
+          w={over === title && 150}
+          bg={darkMode ? "#222" : "#fff"}
+          boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+          justify="space-between"
+          px={over === title && "6"}
+          align="center"
+          borderRadius="5"
+          fontSize="xs"
+          color={darkMode ? "#FFF" : "#333"}
         >
-          <DrawerHeader
-            bg="#FFF"
-            justifyContent="space-between"
+          <Icon
+            as={icon}
+            color={color}
+            fontSize="lg"
+            mr={over === title && "4"}
+          />
+          {over === title && title}
+        </Flex>
+      );
+    }
+
+    return (
+      <Flex
+        flexDir="column"
+        justify="space-between"
+        px="4"       
+           pb="4"
+
+        boxShadow="rgba(0,0,0,0.03) 0 0 10px"
+        position="fixed"
+        style={{
+          paddingTop: 90,
+          width: 80,
+          height: size.height,
+        }}
+      >
+        <Flex flexDir="column" justify="space-between" h="100%">
+          <Flex flexDir="column">
+            <Item
+              title="Dashboard"
+              icon={MdDashboardCustomize}
+              color="#0f9aff"
+            />
+            <Item title="Accounts" icon={MdManageAccounts} color="#f60ffb" />
+            <Item title="Courses" icon={MdLibraryBooks} color="#f55556" />
+            <Item title="Projects" icon={RiPagesFill} color="#744cc6" />
+            <Item title="Whatsapp" icon={RiWhatsappFill} color="#25d366" />
+            <Item title="Messenger" icon={RiMessengerFill} color="#006AFF" />
+            <Item title="Twilio" icon={RiPriceTagFill} color="#f10568" />
+          </Flex>
+          <Item
+            title="Configurações"
+            icon={MdSettings}
+            color={darkMode ? "#AAA" : "#333"}
+          />
+        </Flex>
+      </Flex>
+    );
+  }
+
+  return (
+    <>
+      <Sidebar />
+      <TopNav />
+
+      <Flex
+        onMouseOver={() => {
+          setOver("");
+        }}
+        flexDir="column"
+        bg={darkMode ? "#333" : "#eee"}
+        h="100vh"
+        style={{
+          paddingLeft: 80,
+        }}
+      >
+        <Flex
+          flexDir="column"
+          p="4"
+          style={{
+            paddingTop: 70,
+          }}
+        >
+          {size.width < 1200 ? (
+            <>
+              <ContentCard />
+              <Content />
+            </>
+          ) : (
+            <>
+              <Flex w="100%" justify="center" mt="4" align="center">
+                <Content />
+                <ContentCard />
+              </Flex>
+            </>
+          )}
+        </Flex>
+        <Drawer
+          isOpen={isOpen}
+          placement="bottom"
+          onClose={() => {
+            onClose();
+            setPublicacao(false);
+            setCurso(false);
+            setProduto(false);
+          }}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent
+            height={size.height - 80}
+            bg={darkMode ? "#333" : "#eee"}
             borderTopLeftRadius="10"
             borderTopRightRadius="10"
-            py="6"
-            px="4"
-            w="100%"
-            alignItems="center"
-            borderBottom="1px solid #e0e0e0"
           >
-            <Flex align="center">
-              <Icon as={MdSettings} color="#333" fontSize="xl" />
-              <Text ml="2" color="#333" fontSize="xl">
-                Configurações
-              </Text>
-            </Flex>
-            <DrawerCloseButton
-              size="lg"
-              _focus={{
-                boxShadow: "none",
-              }}
-              color="#333"
-            />
-          </DrawerHeader>
-
-          <DrawerBody>
-            <Flex flexDir={isWideVersion ? "row" : "column"} mt="4">
-              <Flex
-                style={{
-                  width: isWideVersion ? 200 : "100%",
+            <DrawerHeader
+              bg="#FFF"
+              justifyContent="space-between"
+              borderTopLeftRadius="10"
+              borderTopRightRadius="10"
+              py="6"
+              px="4"
+              w="100%"
+              alignItems="center"
+              borderBottom="1px solid #e0e0e0"
+            >
+              <Flex align="center">
+                <Icon as={MdSettings} color="#333" fontSize="xl" />
+                <Text ml="2" color="#333" fontSize="xl">
+                  Configurações
+                </Text>
+              </Flex>
+              <DrawerCloseButton
+                size="lg"
+                _focus={{
+                  boxShadow: "none",
                 }}
-                borderRadius="5"
-                bg={isWideVersion && "#FFF"}
-                p={isWideVersion ? "6" : "2"}
-                flexDir="column"
-              >
-                <Flex
-                  flexDir="column"
-                  borderBottom={
-                    isWideVersion ? "1px solid #f0f0f0" : "1px solid #e0e0e0"
-                  }
-                  pb="4"
-                >
-                  <Text color="#333" fontSize="lg">
-                    {user &&
-                      user.name.split(" ")[0] +
-                        " " +
-                        user.name.split(" ")[user.name.split(" ").length - 1]}
-                  </Text>
-                  <Flex align="center" cursor="pointer">
-                    <Text color="#1f5199" fontSize="md">
-                      uppernodes.com
-                    </Text>
-                    <Icon
-                      ml="1"
-                      as={FiExternalLink}
-                      color="#1f5199"
-                      fontSize="md"
-                    />
-                  </Flex>
-                </Flex>
+                color="#333"
+              />
+            </DrawerHeader>
 
-                {isWideVersion && (
-                  <Flex mt="4">
-                    <Flex
-                      _hover={{
-                        backgroundColor: "#ccc",
-                      }}
-                      cursor="pointer"
-                      w="100%"
-                      bg="#eee"
-                      borderRadius="5"
-                      px="4"
-                      py="2"
-                      justify="center"
-                      align="center"
-                      color="#333"
-                    >
-                      <Icon as={MdStore} color="#333" fontSize="md" mr="2" />
-                      <Text ml="2" color="#333">
-                        Realizar
+            <DrawerBody>
+              <Flex flexDir={isWideVersion ? "row" : "column"} mt="4">
+                <Flex
+                  style={{
+                    width: isWideVersion ? 200 : "100%",
+                  }}
+                  borderRadius="5"
+                  bg={isWideVersion && "#FFF"}
+                  p={isWideVersion ? "6" : "2"}
+                  flexDir="column"
+                >
+                  <Flex
+                    flexDir="column"
+                    borderBottom={
+                      isWideVersion ? "1px solid #f0f0f0" : "1px solid #e0e0e0"
+                    }
+                    pb="4"
+                  >
+                    <Text color="#333" fontSize="lg">
+                      {user &&
+                        user.name.split(" ")[0] +
+                          " " +
+                          user.name.split(" ")[user.name.split(" ").length - 1]}
+                    </Text>
+                    <Flex align="center" cursor="pointer">
+                      <Text color="#1f5199" fontSize="md">
+                        uppernodes.com
                       </Text>
+                      <Icon
+                        ml="1"
+                        as={FiExternalLink}
+                        color="#1f5199"
+                        fontSize="md"
+                      />
                     </Flex>
                   </Flex>
-                )}
-              </Flex>
-              <Flex
-                mt={!isWideVersion && "4"}
-                ml={isWideVersion && "4"}
-                style={{
-                  width: "100%",
-                }}
-                bg={!isWideVersion && "#FFF"}
-                borderRadius="5"
-                p="4"
-                flexDir="column"
-              >
+
+                  {isWideVersion && (
+                    <Flex mt="4">
+                      <Flex
+                        _hover={{
+                          backgroundColor: "#ccc",
+                        }}
+                        cursor="pointer"
+                        w="100%"
+                        bg={darkMode ? "#333" : "#eee"}
+                        borderRadius="5"
+                        px="4"
+                        py="2"
+                        justify="center"
+                        align="center"
+                        color="#333"
+                      >
+                        <Icon as={MdStore} color="#333" fontSize="md" mr="2" />
+                        <Text ml="2" color="#333">
+                          Realizar
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  )}
+                </Flex>
                 <Flex
-                  pb={!isWideVersion && "4"}
-                  borderBottom={
-                    isWideVersion ? "1px solid #f0f0f0" : "1px solid #f0f0f0"
-                  }
+                  mt={!isWideVersion && "4"}
+                  ml={isWideVersion && "4"}
+                  style={{
+                    width: "100%",
+                  }}
+                  bg={!isWideVersion && "#FFF"}
+                  borderRadius="5"
+                  p="4"
+                  flexDir="column"
                 >
-                  <Text
-                    color="#333"
-                    fontSize={isWideVersion ? "2xl" : "lg"}
-                    fontWeight="bold"
+                  <Flex
+                    pb={!isWideVersion && "4"}
+                    borderBottom={
+                      isWideVersion ? "1px solid #f0f0f0" : "1px solid #f0f0f0"
+                    }
                   >
-                    Informações da conta
-                  </Text>
+                    <Text
+                      color="#333"
+                      fontSize={isWideVersion ? "2xl" : "lg"}
+                      fontWeight="bold"
+                    >
+                      Informações da conta
+                    </Text>
+                  </Flex>
                 </Flex>
               </Flex>
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Flex>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Flex>
+    </>
   );
 }

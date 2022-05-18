@@ -27,11 +27,11 @@ import {
   RiNotification2Line,
 } from "react-icons/ri";
 import TopNav from "../../components/TopNav";
-import { AuthContext } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
 import { api } from "../../services/apiClient";
 
 export default function Produtos() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(Context);
 
   type Course = {
     _id: string;

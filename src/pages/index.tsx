@@ -37,7 +37,7 @@ import {
 } from "@chakra-ui/react";
 import ReactPlayer from "react-player";
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { Context } from "../contexts/ContextProvider";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { api } from "../services/apiClient";
@@ -60,7 +60,7 @@ import {
 import Head from "next/head";
 
 export default function Index() {
-  const { user, signOut } = useContext(AuthContext);
+  const { user, signOut } = useContext(Context);
 
   const [playing, setPlaying] = useState(true);
 

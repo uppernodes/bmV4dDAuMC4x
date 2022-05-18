@@ -38,10 +38,10 @@ import {
   RiSearch2Line,
   RiShareLine,
 } from "react-icons/ri";
-import { AuthContext, signOut } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
 
 export default function Landing() {
-  const { signOut } = useContext(AuthContext);
+  const { signOut } = useContext(Context);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();

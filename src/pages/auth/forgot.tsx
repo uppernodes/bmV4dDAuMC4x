@@ -30,10 +30,10 @@ import {
   RiGoogleFill,
   RiLock2Line,
 } from "react-icons/ri";
-import { AuthContext } from "../../contexts/AuthContext";
+import { Context } from "../../contexts/ContextProvider";
 
 export default function Forgot() {
-  const { user, signIn, signUp } = useContext(AuthContext);
+  const { user, signIn, signUp } = useContext(Context);
 
   const router = useRouter();
   const toast = useToast();
@@ -95,7 +95,7 @@ export default function Forgot() {
         >
           <Flex align="center">
             <Image
-              src="https://a174-2804-14c-3f89-8b76-e362-b2de-f80b-8737.sa.ngrok.io/images/inconformedia.png"
+              src="https://06d2-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
               w="45"
               h="45"
               ml={-5}
