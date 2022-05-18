@@ -290,6 +290,12 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     isDarkMode();
+
+    if (user) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
   }, [user, darkMode]);
 
   async function setDarkMode(value: boolean) {
