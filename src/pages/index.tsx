@@ -652,8 +652,14 @@ export default function Index() {
     );
   }
 
-  if (loading) {
-    return <Loading />;
+  if (user) {
+    if (loading) {
+      return <Loading />;
+    }
+  } else {
+    if (loading) {
+      return <Loading />;
+    }
   }
 
   return (
