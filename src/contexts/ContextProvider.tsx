@@ -239,6 +239,8 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
           Router.push("/admin");
 
+          setLoading(false);
+
           return {
             status: "Sucesso!",
             message: "Usuario autenticado com sucesso",
