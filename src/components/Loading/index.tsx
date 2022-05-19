@@ -1,6 +1,7 @@
 import {
   Flex,
   Icon,
+  Image,
   Spinner,
   Text,
   useBreakpointValue,
@@ -15,10 +16,14 @@ import {
   RiLinkedinFill,
 } from "react-icons/ri";
 import { Context } from "../../contexts/ContextProvider";
-import Header from "../Header";
+import TopNav from "../TopNav";
 
-export default function Loading() {
-  const { darkMode } = useContext(Context);
+type LoadingProps = {
+  title?: string;
+};
+
+export default function Loading({ title }: LoadingProps) {
+  const { user, darkMode } = useContext(Context);
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -27,6 +32,31 @@ export default function Loading() {
   });
 
   const toast = useToast();
+
+  function Header({ none }) {
+    return (
+      <Flex
+        align="center"
+        boxShadow="rgba(0,0,0,0.1) 0 0 10px"
+        p="4"
+        bg={!none && darkMode ? "#333" : "#eee"}
+        w="100vw"
+        style={{ height: 80 }}
+      >
+        <Flex justify="space-between" align="center" w="100%">
+          <Flex align="center">
+            <Image
+              borderRadius="full"
+              src="https://b2f4-177-78-184-139.sa.ngrok.io/images/inconformedia.png"
+              w="45"
+              h="45"
+              mr="2"
+            />
+          </Flex>
+        </Flex>
+      </Flex>
+    );
+  }
 
   function Footer() {
     return (
@@ -63,11 +93,11 @@ export default function Loading() {
               fontSize="xs"
               fontFamily="'Quicksand', sans-serif"
             >
-              Siga-nos em nossas redes sociais
+              Feito por e para você ❤️
             </Text>
           </Link>
         </Flex>
-        <Flex align="center">
+        {/* <Flex align="center">
           <Icon
             onClick={() => {
               toast({
@@ -108,7 +138,7 @@ export default function Loading() {
               fontSize="4xl"
             />
           </Link>
-        </Flex>
+        </Flex> */}
       </Flex>
     );
   }
@@ -118,6 +148,8 @@ export default function Loading() {
       flex="1"
       flexDir="column"
       h="100vh"
+      position="absolute"
+      zIndex="1000"
       justifyContent="space-between"
       bg="#EEE"
     >
@@ -130,7 +162,14 @@ export default function Loading() {
         align="center"
       >
         <Spinner color="#333" size="xl" />
-        <Text color="#333" mt="10" fontWeight="thin" fontSize="xl">
+        <Text
+          color="#333"
+          mt="10"
+          fontWeight="thin"
+          w="100%"
+          textAlign="center"
+          fontSize="xl"
+        >
           Aguarde enquanto carregamos seu conteúdo
         </Text>
       </Flex>

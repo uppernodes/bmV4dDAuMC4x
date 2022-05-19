@@ -320,18 +320,18 @@ export function ContextProvider({ children }: AuthProviderProps) {
 
   async function isDarkMode() {
     return new Promise((resolve, reject) => {
-      if (user) {
+      if (user && user._id) {
         api.get(`/user/darkmode/${user._id}`).then((res) => {
           if (res.data === true) {
             handleSetDarkMode(true);
             setTimeout(() => {
               setLoading(false);
-            }, 500);
+            }, 1500);
           } else if (res.data === false) {
             handleSetDarkMode(false);
             setTimeout(() => {
               setLoading(false);
-            }, 500);
+            }, 1500);
           } else {
             reject("Valor invalido");
           }
