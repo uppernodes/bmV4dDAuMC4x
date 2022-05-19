@@ -19,13 +19,14 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdSettings, MdStore } from "react-icons/md";
-import { Context } from "../../contexts/ContextProvider";
+import { Context, signOut } from "../../contexts/ContextProvider";
 import { useWindowSize } from "../../utils/useWindowSize";
 import { FiExternalLink } from "react-icons/fi";
 import {
   RiBankCardFill,
   RiCouponFill,
   RiGlobeFill,
+  RiLogoutBoxRFill,
   RiMessage3Fill,
   RiMoneyDollarCircleFill,
   RiShoppingCartFill,
@@ -44,7 +45,7 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 export default function Settings() {
   const size = useWindowSize();
 
-  const { user, loading } = useContext(Context);
+  const { user, loading, setLoading, signOut } = useContext(Context);
 
   const { darkMode, setDarkMode } = useContext(Context);
 
@@ -217,19 +218,14 @@ export default function Settings() {
             >
               Faturamento
             </Text>
-            <Flex
-              _hover={{
-                backgroundColor: "#D0D0D0",
-              }}
-              py="1"
-              px="4"
-              borderRadius="5"
-              bg={darkMode ? "#333" : "#E0E0E0"}
+
+            <Text
+              textDecorationLine="underline"
+              cursor="pointer"
+              color={darkMode ? "#FFF" : "#333"}
             >
-              <Text cursor="pointer" color={darkMode ? "#FFF" : "#333"}>
-                Últimos 7 dias
-              </Text>
-            </Flex>
+              Últimos 7 dias
+            </Text>
           </Flex>
 
           <SimpleGrid
@@ -245,7 +241,7 @@ export default function Settings() {
               borderRadius={8}
             >
               <Text fontSize="lg" mb="4" color={darkMode ? "#FFF" : "#333"}>
-                Inscritos da semana
+                Bruto
               </Text>
               {series.length > 0 && (
                 <Chart
@@ -262,7 +258,7 @@ export default function Settings() {
               borderRadius={8}
             >
               <Text fontSize="lg" mb="4" color={darkMode ? "#FFF" : "#333"}>
-                Taxa de abertura
+                Liquido
               </Text>
               {series.length && (
                 <Chart
@@ -286,11 +282,21 @@ export default function Settings() {
           backgroundColor: darkMode ? "#3F3F3F" : "#F0F0F0",
         }}
         onClick={() => {
-          setTab(title);
+          if (title === "Sair da sua conta") {
+            setLoading(true);
+            setTimeout(() => {
+              onClose();
+            }, 1000);
+            setTimeout(() => {
+              signOut();
+            }, 1000);
+          } else {
+            setTab(title);
+          }
         }}
         cursor={tab === title ? "default" : "pointer"}
         w="100%"
-        borderBottomRadius={title === "Domínios" ? "5" : "0"}
+        borderBottomRadius={title === "Sair da sua conta" ? "5" : "0"}
         bg={
           tab === title && darkMode
             ? "#3F3F3F"
@@ -416,11 +422,16 @@ export default function Settings() {
                                 user.name.split(" ")[
                                   user.name.split(" ").length - 1
                                 ]} */}
-                          Ricardo Fonseca
+                          {user &&
+                            user.name.split(" ")[0] +
+                              " " +
+                              user.name.split(" ")[
+                                user.name.split(" ").length - 1
+                              ]}
                         </Text>
                         <Flex align="center" cursor="pointer">
                           <Text
-                            color={darkMode ? "#ff5199" : "#1f5199"}
+                            color={darkMode ? "tomato" : "#1f5199"}
                             fontSize="sm"
                           >
                             uppernodes.com/ricardofonseca
@@ -428,7 +439,7 @@ export default function Settings() {
                           <Icon
                             ml="1"
                             as={FiExternalLink}
-                            color={darkMode ? "#ff5199" : "#1f5199"}
+                            color={darkMode ? "tomato" : "#1f5199"}
                             fontSize="xs"
                           />
                         </Flex>
@@ -466,6 +477,10 @@ export default function Settings() {
                     <TabItem title="Cupons de desconto" icon={RiCouponFill} />
                     <TabItem title="Canais de venda" icon={RiMessage3Fill} />
                     <TabItem title="Domínios" icon={RiGlobeFill} />
+                    <TabItem
+                      title="Sair da sua conta"
+                      icon={RiLogoutBoxRFill}
+                    />
                   </Flex>
                 )}
               </Flex>

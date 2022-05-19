@@ -29,6 +29,7 @@ import {
 import TopNav from "../../components/TopNav";
 import { Context } from "../../contexts/ContextProvider";
 import { api } from "../../services/apiClient";
+import { useWindowSize } from "../../utils/useWindowSize";
 
 export default function Produtos() {
   const { user } = useContext(Context);
@@ -49,40 +50,6 @@ export default function Produtos() {
   const [loading, setLoading] = useState(true);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  function useWindowSize() {
-    // Initialize state with undefined width/height so server and client renders match
-    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    useEffect(() => {
-      // only execute all the code below in client side
-      if (typeof window !== "undefined") {
-        // Handler to call on window resize
-
-        // Add event listener
-        window.addEventListener("resize", handleResize);
-
-        // Call handler right away so state gets updated with initial window size
-        handleResize();
-
-        // Remove event listener on cleanup
-        return () => window.removeEventListener("resize", handleResize);
-      }
-    }, []); // Empty array ensures that effect is only run on mount
-    return windowSize;
-  }
 
   const toast = useToast();
   const size = useWindowSize();

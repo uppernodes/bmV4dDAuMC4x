@@ -67,6 +67,7 @@ type AuthContextData = {
   setDarkMode: (value: boolean) => Promise<any>;
   handleSetDarkMode: (value: boolean) => any;
   loading: boolean;
+  setLoading: (value: boolean) => any;
 };
 
 type AuthProviderProps = {
@@ -354,6 +355,7 @@ export function ContextProvider({ children }: AuthProviderProps) {
           setDarkMode,
           handleSetDarkMode,
           loading,
+          setLoading
         }}
       >
         {children}
@@ -378,6 +380,7 @@ export function ContextProvider({ children }: AuthProviderProps) {
           setDarkMode,
           handleSetDarkMode,
           loading,
+          setLoading
         }}
       >
         {children}

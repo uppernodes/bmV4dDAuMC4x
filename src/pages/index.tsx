@@ -60,6 +60,7 @@ import {
 import Head from "next/head";
 import { Html, Main, NextScript } from "next/document";
 import Loading from "../components/Loading";
+import { useWindowSize } from "../utils/useWindowSize";
 
 export default function Index() {
   const { user, signOut, darkMode, handleSetDarkMode, setDarkMode, loading } =
@@ -80,42 +81,6 @@ export default function Index() {
     md: true,
     lg: true,
   });
-
-  // envio de pedido / suuporte por telefone / mensagens notifications / meios de comunicaco que utilizam diariamente / varios dispositivos / chat bots / agentes / whatsapp / facebook / messenger / instagram / telegram / sms
-
-  function useWindowSize() {
-    // Initialize state with undefined width/height so server and client renders match
-    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    useEffect(() => {
-      // only execute all the code below in client side
-      if (typeof window !== "undefined") {
-        // Handler to call on window resize
-
-        // Add event listener
-        window.addEventListener("resize", handleResize);
-
-        // Call handler right away so state gets updated with initial window size
-        handleResize();
-
-        // Remove event listener on cleanup
-        return () => window.removeEventListener("resize", handleResize);
-      }
-    }, []); // Empty array ensures that effect is only run on mount
-    return windowSize;
-  }
 
   function Banner() {
     return (

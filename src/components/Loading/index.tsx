@@ -47,7 +47,7 @@ export default function Loading({ title }: LoadingProps) {
           <Flex align="center">
             <Image
               borderRadius="full"
-              src="https://b2f4-177-78-184-139.sa.ngrok.io/images/inconformedia.png"
+              src="http://localhost:5556/images/inconformedia.png"
               w="45"
               h="45"
               mr="2"

@@ -10,7 +10,7 @@ export function setupAPIClient(ctx = null) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: "https://b2f4-177-78-184-139.sa.ngrok.io",
+    baseURL: "http://localhost:5556",
     headers: {
       Authorization: `Bearer ${cookies["nextauth.token"]}`,
     },
