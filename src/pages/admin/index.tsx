@@ -47,19 +47,29 @@ import {
 } from "react-icons/md";
 import {
   RiArrowDropDownFill,
+  RiBankCardFill,
+  RiCactusFill,
+  RiCouponFill,
+  RiGlobalFill,
+  RiGlobeFill,
   RiMenu2Line,
   RiMenuLine,
+  RiMessage3Fill,
   RiMessengerFill,
+  RiMoneyDollarBoxFill,
+  RiMoneyDollarCircleFill,
   RiNotification2Line,
   RiPagesFill,
   RiPriceTagFill,
   RiPulseLine,
   RiSearch2Line,
   RiShareLine,
+  RiShoppingCartFill,
   RiUser3Fill,
   RiUser3Line,
   RiUserFill,
   RiVideoUploadLine,
+  RiWalletFill,
   RiWhatsappFill,
 } from "react-icons/ri";
 import TopNav from "../../components/TopNav";
@@ -69,9 +79,10 @@ import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import Loading from "../../components/Loading";
 import Head from "next/head";
+import { useWindowSize } from "../../utils/useWindowSize";
 
 export default function Landing() {
-  const { user, signOut, darkMode, setDarkMode, loading } = useContext(Context);
+  const { user, signOut, loading, darkMode, setDarkMode } = useContext(Context);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -97,99 +108,6 @@ export default function Landing() {
 
   const router = useRouter();
   const size = useWindowSize();
-
-  function useWindowSize() {
-    // Initialize state with undefined width/height so server and client renders match
-    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    useEffect(() => {
-      // only execute all the code below in client side
-      if (typeof window !== "undefined") {
-        // Handler to call on window resize
-
-        // Add event listener
-        window.addEventListener("resize", handleResize);
-
-        // Call handler right away so state gets updated with initial window size
-        handleResize();
-
-        // Remove event listener on cleanup
-        return () => window.removeEventListener("resize", handleResize);
-      }
-    }, []); // Empty array ensures that effect is only run on mount
-    return windowSize;
-  }
-
-  const Chart = dynamic(() => import("react-apexcharts"), {
-    ssr: false,
-  });
-
-  const series = [
-    {
-      name: "series1",
-      data: [31, 120, 10, 28, 51, 18, 109],
-    },
-  ];
-
-  const options: ApexOptions = {
-    chart: {
-      toolbar: {
-        show: false,
-      },
-      zoom: {
-        enabled: false,
-      },
-      foreColor: "#333",
-    },
-    grid: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    tooltip: {
-      enabled: false,
-    },
-    xaxis: {
-      type: "datetime",
-      axisBorder: {
-        color: "#333",
-      },
-      axisTicks: {
-        color: "#333",
-      },
-      categories: [
-        "2021-03-18T00:00:00.000Z",
-        "2021-03-19T00:00:00.000Z",
-        "2021-03-20T00:00:00.000Z",
-        "2021-03-21T00:00:00.000Z",
-        "2021-03-22T00:00:00.000Z",
-        "2021-03-23T00:00:00.000Z",
-        "2021-03-24T00:00:00.000Z",
-      ],
-    },
-    fill: {
-      opacity: 0.3,
-      type: "gradient",
-      gradient: {
-        shade: "dark",
-        opacityFrom: 0.7,
-        opacityTo: 0.5,
-      },
-    },
-  };
 
   function Header() {
     return (
@@ -1340,7 +1258,7 @@ export default function Landing() {
             } else if (title === "Discounts") {
               router.push("/discounts");
             } else {
-              onOpen();
+              router.push("/admin/settings");
             }
           }}
           onMouseOver={() => {
@@ -1398,9 +1316,9 @@ export default function Landing() {
             <Item title="Accounts" icon={MdManageAccounts} color="#f60ffb" />
             <Item title="Courses" icon={MdLibraryBooks} color="#f55556" />
             <Item title="Projects" icon={RiPagesFill} color="#744cc6" />
-            <Item title="Whatsapp" icon={RiWhatsappFill} color="#25d366" />
-            <Item title="Messenger" icon={RiMessengerFill} color="#006AFF" />
-            <Item title="Twilio" icon={RiPriceTagFill} color="#f10568" />
+            {/* <Item title="Whatsapp" icon={RiWhatsappFill} color="#25d366" /> */}
+            {/* <Item title="Messenger" icon={RiMessengerFill} color="#006AFF" /> */}
+            {/* <Item title="Twilio" icon={RiPriceTagFill} color="#f10568" /> */}
           </Flex>
           <Item
             title="Configurações"
@@ -1458,141 +1376,6 @@ export default function Landing() {
             </>
           )}
         </Flex>
-        <Drawer
-          isOpen={isOpen}
-          placement="bottom"
-          onClose={() => {
-            onClose();
-            setPublicacao(false);
-            setCurso(false);
-            setProduto(false);
-          }}
-          finalFocusRef={btnRef}
-        >
-          <DrawerOverlay />
-          <DrawerContent
-            height={size.height - 80}
-            bg={darkMode ? "#333" : "#eee"}
-            borderTopLeftRadius="10"
-            borderTopRightRadius="10"
-          >
-            <DrawerHeader
-              bg="#FFF"
-              justifyContent="space-between"
-              borderTopLeftRadius="10"
-              borderTopRightRadius="10"
-              py="6"
-              px="4"
-              w="100%"
-              alignItems="center"
-              borderBottom="1px solid #e0e0e0"
-            >
-              <Flex align="center">
-                <Icon as={MdSettings} color="#333" fontSize="xl" />
-                <Text ml="2" color="#333" fontSize="xl">
-                  Configurações
-                </Text>
-              </Flex>
-              <DrawerCloseButton
-                size="lg"
-                _focus={{
-                  boxShadow: "none",
-                }}
-                color="#333"
-              />
-            </DrawerHeader>
-
-            <DrawerBody>
-              <Flex flexDir={isWideVersion ? "row" : "column"} mt="4">
-                <Flex
-                  style={{
-                    width: isWideVersion ? 200 : "100%",
-                  }}
-                  borderRadius="5"
-                  bg={isWideVersion && "#FFF"}
-                  p={isWideVersion ? "6" : "2"}
-                  flexDir="column"
-                >
-                  <Flex
-                    flexDir="column"
-                    borderBottom={
-                      isWideVersion ? "1px solid #f0f0f0" : "1px solid #e0e0e0"
-                    }
-                    pb="4"
-                  >
-                    <Text color="#333" fontSize="lg">
-                      {user &&
-                        user.name.split(" ")[0] +
-                          " " +
-                          user.name.split(" ")[user.name.split(" ").length - 1]}
-                    </Text>
-                    <Flex align="center" cursor="pointer">
-                      <Text color="#1f5199" fontSize="md">
-                        uppernodes.com
-                      </Text>
-                      <Icon
-                        ml="1"
-                        as={FiExternalLink}
-                        color="#1f5199"
-                        fontSize="md"
-                      />
-                    </Flex>
-                  </Flex>
-
-                  {isWideVersion && (
-                    <Flex mt="4">
-                      <Flex
-                        _hover={{
-                          backgroundColor: "#ccc",
-                        }}
-                        cursor="pointer"
-                        w="100%"
-                        bg={darkMode ? "#333" : "#eee"}
-                        borderRadius="5"
-                        px="4"
-                        py="2"
-                        justify="center"
-                        align="center"
-                        color="#333"
-                      >
-                        <Icon as={MdStore} color="#333" fontSize="md" mr="2" />
-                        <Text ml="2" color="#333">
-                          Realizar
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  )}
-                </Flex>
-                <Flex
-                  mt={!isWideVersion && "4"}
-                  ml={isWideVersion && "4"}
-                  style={{
-                    width: "100%",
-                  }}
-                  bg={!isWideVersion && "#FFF"}
-                  borderRadius="5"
-                  p="4"
-                  flexDir="column"
-                >
-                  <Flex
-                    pb={!isWideVersion && "4"}
-                    borderBottom={
-                      isWideVersion ? "1px solid #f0f0f0" : "1px solid #f0f0f0"
-                    }
-                  >
-                    <Text
-                      color="#333"
-                      fontSize={isWideVersion ? "2xl" : "lg"}
-                      fontWeight="bold"
-                    >
-                      Informações da conta
-                    </Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
       </Flex>
     </>
   );

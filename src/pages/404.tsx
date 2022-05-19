@@ -89,7 +89,7 @@ export default function NotFound() {
           </Text>
         </Flex>
         <Image
-          src="https://b488-168-228-216-82.sa.ngrok.io/images/404.png"
+          src="http://localhost:5556/images/404.png"
           mr="2"
           mx="10"
           maxW={isWideVersion ? 500 : 350}

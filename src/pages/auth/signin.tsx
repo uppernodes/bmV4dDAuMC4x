@@ -31,6 +31,7 @@ import {
   RiLock2Line,
 } from "react-icons/ri";
 import { Context } from "../../contexts/ContextProvider";
+import { useWindowSize } from "../../utils/useWindowSize";
 
 export default function SignUp() {
   const { user, signIn, signUp } = useContext(Context);
@@ -75,31 +76,6 @@ export default function SignUp() {
     }
   }
 
-  function useWindowSize() {
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        window.addEventListener("resize", handleResize);
-
-        handleResize();
-
-        return () => window.removeEventListener("resize", handleResize);
-      }
-    }, []);
-    return windowSize;
-  }
-
   return (
     <Flex h="100%" bg="#fafafa">
       <Head>
@@ -123,7 +99,7 @@ export default function SignUp() {
         >
           <Flex align="center">
             <Image
-              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="http://localhost:5556/images/inconformedia.png"
               w="45"
               h="45"
               ml={-5}

@@ -59,154 +59,29 @@ export default function Header({ none }) {
           <Flex align="center">
             <Image
               borderRadius="full"
-              src="https://b488-168-228-216-82.sa.ngrok.io/images/inconformedia.png"
+              src="http://localhost:5556/images/inconformedia.png"
               w="45"
               h="45"
               mr="2"
             />
           </Flex>
           <Flex display={none ? "none" : null} align="center">
-            {/* <Menu>
-              <MenuButton
-                borderRadius="full"
-                p="2"
-                _hover={{
-                  height: 40,
-                  width: 40,
-                  backgroundColor: darkMode ? "#555" : "#e0e0e0",
-                }}
-                style={{
-                  height: 40,
-                  width: 40,
-                }}
-                ml="5"
+            <Link href={user && user._id ? "/admin" : "/auth/signup"}>
+              <Flex
+                cursor="pointer"
+                bg="#F00066"
+                px="4"
+                py="2"
+                ml="4"
+                borderRadius="5"
+                justify="center"
+                align="center"
               >
-                <Icon
-                  mt="1"
-                  as={RiUserLine}
-                  cursor="pointer"
-                  color={darkMode ? "#EEE" : "#333"}
-                  fontSize="20"
-                />
-              </MenuButton>
-              <MenuList bg="#f0f0f0" border="0px solid transparent" py="0">
-                <MenuItem
-                  _hover={{
-                    backgroundColor: "#e0e0e0",
-                    borderRadius: 5,
-                  }}
-                  justifyContent="space-between"
-                  py="4"
-                  onClick={() => {
-                    setDarkMode(!darkMode);
-                  }}
-                  color="#333"
-                  fontSize="sm"
-                >
-                  Modo escuro
-                  <Icon as={MdDarkMode} color="#333" />
-                </MenuItem>
-                <MenuItem
-                  _hover={{
-                    backgroundColor: "#e0e0e0",
-                    borderRadius: 5,
-                  }}
-                  justifyContent="space-between"
-                  py="4"
-                  onClick={() => {}}
-                  color="#333"
-                  fontSize="sm"
-                >
-                  Quero vender meu curso
-                </MenuItem>
-                <MenuItem
-                  _hover={{
-                    backgroundColor: "#e0e0e0",
-                    borderRadius: 5,
-                  }}
-                  justifyContent="space-between"
-                  py="4"
-                  onClick={() => {}}
-                  color="#333"
-                  fontSize="sm"
-                >
-                  Quero vender meu ebook
-                </MenuItem>
-                <MenuItem
-                  _hover={{
-                    backgroundColor: "#e0e0e0",
-                    borderRadius: 5,
-                  }}
-                  justifyContent="space-between"
-                  py="4"
-                  onClick={() => {}}
-                  color="#333"
-                  fontSize="sm"
-                >
-                  Quero criar paginas de vendas
-                </MenuItem>
-              </MenuList>
-            </Menu> */}
-            {user && user._id ? (
-              <Link href="/admin">
-                <Flex
-                  cursor="pointer"
-                  bg="#F00066"
-                  px="4"
-                  py="2"
-                  ml="4"
-                  borderRadius="5"
-                  justify="center"
-                  align="center"
-                >
-                  <Text color="#FFF" fontSize="14" fontWeight="bold">
-                    Dashboard
-                  </Text>
-                </Flex>
-              </Link>
-            ) : (
-              <Link href="/auth/signup">
-                <Flex
-                  cursor="pointer"
-                  bg="#F00066"
-                  px="4"
-                  py="2"
-                  ml="4"
-                  borderRadius="5"
-                  justify="center"
-                  align="center"
-                >
-                  <Text color="#FFF" fontSize="14" fontWeight="bold">
-                    Entrar
-                  </Text>
-                </Flex>
-              </Link>
-            )}
-            {/* <Flex
-              onClick={() => setMenu(!menu)}
-              justify="center"
-              align="center"
-              flexDir="column"
-              ml="4"
-            >
-              {menu ? (
-                <Icon as={RiCloseFill} color="#000" fontSize="20" />
-              ) : (
-                <>
-                  <div
-                    style={{ height: 2, width: 20, backgroundColor: "#000" }}
-                  />
-                  <div
-                    style={{
-                      height: 2,
-                      width: 20,
-                      marginTop: 5,
-                      backgroundColor: "#000",
-                    }}
-                  />
-                </>
-              )}
-            </Flex> */}
+                <Text color="#FFF" fontSize="14" fontWeight="bold">
+                  Painel de controle
+                </Text>
+              </Flex>
+            </Link>
           </Flex>
         </Flex>
       </Flex>

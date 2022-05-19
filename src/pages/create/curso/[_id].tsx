@@ -23,13 +23,13 @@ export default function Success() {
     try {
       await api.get(`/content/course/${_id}`).then((res) => {
         if (res.data.models.length > 0) {
-          alert(JSON.stringify(res.data))
+          alert(JSON.stringify(res.data));
         } else {
           setCourseExists(false);
         }
       });
     } catch (e) {
-        router.push("/");
+      router.push("/");
     }
   }
 
