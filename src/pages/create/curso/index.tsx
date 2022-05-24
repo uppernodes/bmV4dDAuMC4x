@@ -39,7 +39,7 @@ import { api } from "../../../services/apiClient";
 import { useWindowSize } from "../../../utils/useWindowSize";
 
 export default function Curso() {
-  const { user, loading } = useContext(Context);
+  const { user, darkMode, loading } = useContext(Context);
 
   type Course = {
     _id: string;
@@ -354,7 +354,7 @@ export default function Curso() {
           }}
         >
           <Flex
-            border="2px solid #000"
+            border={darkMode ? "2px solid #FFF" : "2px solid #000"}
             style={{ width: 25, height: 25, borderRadius: 25 }}
             justify="center"
             align="center"
@@ -362,12 +362,17 @@ export default function Curso() {
             {type === value && (
               <Flex
                 style={{ height: 15, width: 15 }}
-                bg="#000"
+                bg={darkMode ? "#FFF" : "#000"}
                 borderRadius="full"
               />
             )}
           </Flex>
-          <Text color="#000" ml="2" fontSize="sm" fontWeight="bold">
+          <Text
+            color={darkMode ? "#FFF" : "#000"}
+            ml="2"
+            fontSize="sm"
+            fontWeight="bold"
+          >
             {title}
           </Text>
         </Flex>
@@ -378,19 +383,19 @@ export default function Curso() {
       <Flex flexDir="column" pt="4">
         <Flex justify="space-between" w="100%">
           <Flex flexDir="column">
-            <Text color="#000" fontSize="lg" fontWeight="bold">
+            <Text
+              color={darkMode ? "#FFF" : "#000"}
+              fontSize="lg"
+              fontWeight="bold"
+            >
               Adicionar modelos de subscrição
             </Text>
-            <Text color="#000" fontSize="sm" mb="4">
+            <Text color={darkMode ? "#FFF" : "#000"} fontSize="sm" mb="4">
               Adicione um nome e selecione o modelo de cobrança
             </Text>
           </Flex>
         </Flex>
-        <Flex
-          mb={modelos.length > 0 && "4"}
-          overflowX="scroll"
-          pb={modelos.length > 5 && "4"}
-        >
+        <Flex mb={modelos.length > 0 && "4"} pb={modelos.length > 5 && "4"}>
           {modelos.map((p, i) => {
             return (
               <Flex
@@ -440,6 +445,7 @@ export default function Curso() {
             setName(e.target.value);
           }}
           mb="4"
+          bg={darkMode ? "#FFF" : "transparent"}
           placeholder="Nome do modelo"
           color="#000"
           style={{ width: 200 }}
@@ -449,7 +455,7 @@ export default function Curso() {
         {type === "Paid" && (
           <Flex mt="4">
             <Flex flexDir="column" mr="2">
-              <Text color="#000" fontWeight="bold">
+              <Text color={darkMode ? "#FFF" : "#000"} fontWeight="bold">
                 Valor
               </Text>
               <NumberFormat
@@ -474,7 +480,7 @@ export default function Curso() {
               />
             </Flex>
             <Flex flexDir="column">
-              <Text color="#000" fontWeight="bold">
+              <Text color={darkMode ? "#FFF" : "#000"} fontWeight="bold">
                 Metodo
               </Text>
               <Menu>
@@ -557,11 +563,11 @@ export default function Curso() {
           mt="4"
           justify="center"
           align="center"
-          bg="#000"
+          bg={darkMode ? "#FFF" : "#000"}
           style={{
             fontSize: 14,
             fontWeight: "bold",
-            color: "#FFF",
+            color: darkMode ? "#333" : "#FFF",
             width: 200,
             height: 40,
           }}
@@ -585,9 +591,13 @@ export default function Curso() {
           px="4"
           justify="center"
           align="center"
-          bg={category === title ? "#000" : "#222"}
+          bg={category === title ? "#444" : darkMode ? "#FFF" : "#222"}
         >
-          <Text color="#FFF" fontSize={size.width > 600 ? "sm" : "xs"}>
+          <Text
+            fontWeight={category === title && "bold"}
+            color={category === title ? "#FFF" : darkMode ? "#333" : "#FFF"}
+            fontSize={size.width > 600 ? "sm" : "xs"}
+          >
             {title}
           </Text>
         </Flex>
@@ -596,7 +606,7 @@ export default function Curso() {
 
     return (
       <>
-        <Text mt="4" color="#000" fontWeight="bold">
+        <Text mt="4" color={darkMode ? "#FFF" : "#000"} fontWeight="bold">
           Categoria
         </Text>
 
@@ -615,7 +625,7 @@ export default function Curso() {
 
     return (
       <>
-        <Text mt="4" color="#000" fontWeight="bold">
+        <Text mt="4" color={darkMode ? "#FFF" : "#000"} fontWeight="bold">
           Palavras-chaves
         </Text>
         <Flex mt={palavrasChave.length > 0 && "4"}>
@@ -661,6 +671,7 @@ export default function Curso() {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setPalavraChave(e.target.value);
           }}
+          bg={darkMode ? "#FFF" : "transparent"}
           placeholder="Insira uma palavra-chave"
         />
         <Flex
@@ -678,15 +689,19 @@ export default function Curso() {
           }}
           mt="4"
           style={{
-            height: 40,
             width: 200,
+            height: 40,
           }}
-          bg="#000"
+          bg={darkMode ? "#FFF" : "#000"}
           borderRadius="5"
           justify="center"
           align="center"
         >
-          <Text color="#FFF" fontSize="14" fontWeight="bold">
+          <Text
+            color={darkMode ? "#333" : "#FFF"}
+            fontSize="14"
+            fontWeight="bold"
+          >
             Adicionar
           </Text>
         </Flex>
@@ -703,7 +718,7 @@ export default function Curso() {
   }
 
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" bg={darkMode ? "#333" : "#EEE"}>
       <TopNav />
 
       <Flex
@@ -715,23 +730,18 @@ export default function Curso() {
         p="4"
       >
         <Text
-          color="#000"
+          color={darkMode ? "#FFF" : "#000"}
           fontWeight="bold"
           fontFamily="sans-serif"
-          fontSize="4xl"
+          fontSize="3xl"
+          mt="2"
         >
-          Criar um novo curso
+          Criar curso
         </Text>
-        <Text color="#000" fontFamily="sans-serif" fontSize="xs">
-          Um curso e formado por modulos, que por sua vez sao formados por audio
-          video e texto.
-        </Text>
-
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
 
         <Flex w="100vw" maxW={size.width - 50} mt="4">
           <Flex flexDir="column">
-            <Text color="#000" fontWeight="bold">
+            <Text color={darkMode ? "#FFF" : "#000"} mb="2" fontWeight="bold">
               Nome do curso
             </Text>
             <Input
@@ -751,13 +761,14 @@ export default function Curso() {
               }}
               placeholder=""
               color="#000"
+              bg={darkMode ? "#FFF" : "transparent"}
               style={{ maxWidth: 400, width: size.width - 50 }}
             />
           </Flex>
         </Flex>
 
         <Flex flexDir="column" mt="4">
-          <Text color="#000" fontWeight="bold">
+          <Text color={darkMode ? "#FFF" : "#000"} mb="2" fontWeight="bold">
             Descricao (opcional)
           </Text>
           <Input
@@ -767,24 +778,16 @@ export default function Curso() {
             }}
             placeholder=""
             color="#000"
+            bg={darkMode ? "#FFF" : "transparent"}
             style={{ maxWidth: 400, width: size.width - 50 }}
           />
         </Flex>
 
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
-
         <Categoria />
-
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="4" />
 
         <PalavrasChave />
 
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
-
         <Model />
-
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
 
         <Flex align="center" mt="6">
           <Icon as={RiInformationLine} color="#333" fontSize="md" />
@@ -792,8 +795,6 @@ export default function Curso() {
             Você está criando um curso publico
           </Text>
         </Flex>
-
-        <Flex w="100%" style={{ height: 1 }} bg="#f5f5f5" mt="6" />
 
         <Flex mt="4">
           <Flex
@@ -803,14 +804,14 @@ export default function Curso() {
             justify="center"
             align="center"
             cursor="pointer"
-            bg="#000"
+            bg={darkMode ? "#FFF" : "#000"}
             borderRadius="5"
             style={{
               height: 55,
               width: "100%",
             }}
           >
-            <Text color="#FFF" fontWeight="bold">
+            <Text color={darkMode ? "#333" : "#FFF"} fontWeight="bold">
               Adicionar curso
             </Text>
           </Flex>

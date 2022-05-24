@@ -23,7 +23,6 @@ export default function Success() {
     try {
       await api.get(`/content/course/${_id}`).then((res) => {
         if (res.data.models.length > 0) {
-          alert(JSON.stringify(res.data));
         } else {
           setCourseExists(false);
         }
@@ -49,21 +48,9 @@ export default function Success() {
     }, 15500);
     setTimeout(() => {
       setMessage("Seu projeto foi criado com sucesso! 😜");
+      router.push(`/content/curso/${_id}`);
     }, 20000);
-    setTimeout(() => {
-      if (courseExists) {
-        router.push(`/curso/${_id}`);
-      }
-    }, 21000);
   }, []);
-
-  if (!user) {
-    return <Loading />;
-  } else if (loading) {
-    return <Loading />;
-  } else if (!courseExists) {
-    return <Loading />;
-  }
 
   return (
     <Flex

@@ -233,7 +233,7 @@ export default function Index() {
             registrar e ter acesso a sua conta como criador de conteúdo.
           </Text>
         )}
-        {!user && (
+        {/* {!user && (
           <Flex mt="10" justify="center" align="center">
             <Image
               w={size.width - 50}
@@ -255,7 +255,7 @@ export default function Index() {
               <Icon as={RiPlayFill} color="#FFF" fontSize="50" />
             </Flex>
           </Flex>
-        )}
+        )} */}
       </Flex>
     );
   }
@@ -276,23 +276,28 @@ export default function Index() {
         w={size.width}
       >
         <Flex flexDir="column" mx="auto" w="100%" maxW={1000}>
-          <Flex w="100%" justify="space-between" align="center">
+          <Flex
+            flexDir={isWideVersion ? "row" : "column"}
+            w="100%"
+            justify="space-between"
+            align="center"
+          >
             <Text
               color="#FFF"
               w="100%"
               fontWeight="bold"
-              fontSize={isWideVersion ? "7xl" : "5xl"}
+              fontSize={isWideVersion ? "5xl" : "5xl"}
             >
               {isWideVersion ? "Comunidade ativa" : "Comunidade"}
             </Text>
-            <Flex align="center">
+            <Flex w="100%" align="center">
               <Icon
                 onClick={() => alert("Criar conta no linkedin e fazer o link")}
                 cursor="pointer"
                 as={RiLinkedinBoxFill}
                 mr={isWideVersion ? "5" : "2"}
                 color="#FFF"
-                fontSize="5xl"
+                fontSize="4xl"
               />
               <Icon
                 onClick={() =>
@@ -302,7 +307,7 @@ export default function Index() {
                 as={RiDiscordFill}
                 mr={isWideVersion ? "5" : "2"}
                 color="#FFF"
-                fontSize="5xl"
+                fontSize="4xl"
               />
               <Icon
                 onClick={() =>
@@ -312,7 +317,7 @@ export default function Index() {
                 as={RiGithubFill}
                 mr={isWideVersion ? "5" : "2"}
                 color="#FFF"
-                fontSize="5xl"
+                fontSize="4xl"
               />
             </Flex>
           </Flex>

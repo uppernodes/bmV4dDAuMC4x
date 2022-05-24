@@ -31,46 +31,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { BiLayerPlus, BiListPlus, BiLogOut, BiUserPlus } from "react-icons/bi";
-import {
-  FiChevronDown,
-  FiExternalLink,
-  FiFolderPlus,
-  FiPlusSquare,
-} from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
 import {
   MdDashboardCustomize,
   MdLibraryBooks,
   MdManageAccounts,
   MdSettings,
-  MdSettingsApplications,
-  MdStore,
 } from "react-icons/md";
 import {
-  RiArrowDropDownFill,
-  RiBankCardFill,
-  RiCactusFill,
-  RiCouponFill,
-  RiGlobalFill,
-  RiGlobeFill,
-  RiMenu2Line,
   RiMenuLine,
-  RiMessage3Fill,
-  RiMessengerFill,
-  RiMoneyDollarBoxFill,
-  RiMoneyDollarCircleFill,
   RiNotification2Line,
   RiPagesFill,
-  RiPriceTagFill,
-  RiPulseLine,
   RiSearch2Line,
   RiShareLine,
-  RiShoppingCartFill,
-  RiUser3Fill,
-  RiUser3Line,
-  RiUserFill,
-  RiVideoUploadLine,
-  RiWalletFill,
-  RiWhatsappFill,
+  RiVideoAddFill,
 } from "react-icons/ri";
 import TopNav from "../../components/TopNav";
 import { Context } from "../../contexts/ContextProvider";
@@ -80,9 +54,11 @@ import { ApexOptions } from "apexcharts";
 import Loading from "../../components/Loading";
 import Head from "next/head";
 import { useWindowSize } from "../../utils/useWindowSize";
+import { api } from "../../services/apiClient";
 
 export default function Landing() {
-  const { user, signOut, loading, darkMode, setDarkMode } = useContext(Context);
+  const { user, signOut, loading, darkMode, setLoading, setDarkMode } =
+    useContext(Context);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -100,6 +76,8 @@ export default function Landing() {
 
   const [over, setOver] = useState("");
 
+  const [courses, setCourses] = useState([]);
+
   const isWideVersion = useBreakpointValue({
     base: false,
     md: true,
@@ -108,6 +86,18 @@ export default function Landing() {
 
   const router = useRouter();
   const size = useWindowSize();
+
+  async function fetchCoursesById() {
+    if (user && user._id) {
+      await api.get(`/content/courses/${user._id}`).then((res) => {
+        setCourses(res.data);
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchCoursesById();
+  }, []);
 
   function Header() {
     return (
@@ -1225,13 +1215,17 @@ export default function Landing() {
   function Greeting() {
     return (
       <>
-        <Flex align="center" justify="space-between">
+        <Flex align="center" justify="space-between" maxW={300} w="100%">
           <Flex flexDir="column">
-            <Text mt="5" color="#333" fontSize="md">
-              Boa noite
+            <Text mt="5" color={darkMode ? "#FFF" : "#333"} fontSize="md">
+              Seja bem-vindo(a)
             </Text>
-            <Text color="#000" fontWeight="bold" fontSize="3xl">
-              Ricardo
+            <Text
+              color={darkMode ? "#FFF" : "#333"}
+              fontWeight="bold"
+              fontSize="3xl"
+            >
+              {user && user.name.split(" ")[0]}
             </Text>
           </Flex>
           <Text fontSize="4xl" mt="4" ml="4">
@@ -1239,6 +1233,49 @@ export default function Landing() {
           </Text>
         </Flex>
       </>
+    );
+  }
+
+  function UserCourses() {
+    function Course({ id, title }) {
+      return (
+        <Flex
+          onClick={() => {
+            router.push(`/content/curso/${id}`)
+          }}
+          mr="4"
+          borderRadius="5"
+          flexDir="column"
+          bg={darkMode ? "#EEE" : "#333"}
+          style={{
+            height: 150,
+            width: 200,
+          }}
+          p="2"
+          justify="flex-end"
+        >
+          <Text color="#FFF">{title}</Text>
+        </Flex>
+      );
+    }
+
+    return (
+      <Flex
+        flexDir="column"
+        w="100%"
+        my="4"
+        pt="4"
+        borderTop={darkMode ? "1px solid #eee" : "1px solid #e0e0e0"}
+      >
+        <Text color={darkMode ? "#EEE" : "#333"} fontSize={["xl", "2xl"]}>
+          Seus cursos
+        </Text>
+        <Flex w="100%" mt="2">
+          {courses.map((course, i) => {
+            return <Course id={course._id} title={course.name} />;
+          })}
+        </Flex>
+      </Flex>
     );
   }
 
@@ -1330,6 +1367,77 @@ export default function Landing() {
     );
   }
 
+  function CreateCourse() {
+    return (
+      <Flex
+        mt="4"
+        borderRadius="5"
+        flexDir="column"
+        bg={darkMode ? "#222" : "#FFF"}
+        h="100%"
+        w="100%"
+        maxH={isWideVersion ? null : 400}
+        justify="center"
+        align="center"
+      >
+        <Flex
+          borderRadius="full"
+          bg={darkMode ? "#333" : "#EEE"}
+          p="4"
+          justify="center"
+          align="center"
+        >
+          <Icon
+            as={RiVideoAddFill}
+            color={darkMode ? "#FFF" : "#333"}
+            fontSize="4xl"
+          />
+        </Flex>
+        <Text
+          mt="2"
+          fontWeight="bold"
+          w="100%"
+          textAlign="center"
+          color={darkMode ? "#FFF" : "#333"}
+          fontSize="xl"
+        >
+          Voce ainda nao possui nenhum curso
+        </Text>
+
+        <Flex
+          onClick={() => {
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              router.push("/create/curso");
+            }, 1000);
+          }}
+          cursor="pointer"
+          _hover={{
+            backgroundColor: darkMode ? "#555" : "#e0e0e0",
+          }}
+          bg={darkMode ? "#333" : "#EEE"}
+          py="3"
+          px="4"
+          mt="2"
+          justify="center"
+          align="center"
+          borderRadius="5"
+        >
+          <Text
+            color={darkMode ? "#FFF" : "#333"}
+            fontWeight="bold"
+            fontSize="md"
+            w="100%"
+            textAlign="center"
+          >
+            Criar seu primeiro curso
+          </Text>
+        </Flex>
+      </Flex>
+    );
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -1364,14 +1472,16 @@ export default function Landing() {
         >
           {size.width < 1200 ? (
             <>
-              <ContentCard />
-              <Content />
+              <Flex flexDir="column" w="100%" h="calc(100vh - 120px)" mt="4">
+                <Greeting />
+                {courses.length > 0 ? <UserCourses /> : <CreateCourse />}
+              </Flex>
             </>
           ) : (
             <>
-              <Flex w="100%" justify="center" mt="4" align="center">
-                <Content />
-                <ContentCard />
+              <Flex flexDir="column" w="100%" h="calc(100vh - 120px)" mt="4">
+                <Greeting />
+                {courses.length > 0 ? <UserCourses /> : <CreateCourse />}
               </Flex>
             </>
           )}
